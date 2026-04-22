@@ -1,0 +1,15 @@
+D:\AYM Programming\Prog&Files\AymanFreelance.PL\AymanFreelance.BLL\bin\Release\net9.0\AymanFreelance.BLL.deps.json
+D:\AYM Programming\Prog&Files\AymanFreelance.PL\AymanFreelance.BLL\bin\Release\net9.0\AymanFreelance.BLL.dll
+D:\AYM Programming\Prog&Files\AymanFreelance.PL\AymanFreelance.BLL\bin\Release\net9.0\AymanFreelance.BLL.pdb
+D:\AYM Programming\Prog&Files\AymanFreelance.PL\AymanFreelance.BLL\bin\Release\net9.0\AymanFreelance.DAL.dll
+D:\AYM Programming\Prog&Files\AymanFreelance.PL\AymanFreelance.BLL\bin\Release\net9.0\AymanFreelance.DAL.pdb
+D:\AYM Programming\Prog&Files\AymanFreelance.PL\AymanFreelance.BLL\obj\Release\net9.0\AymanFreelance.BLL.csproj.AssemblyReference.cache
+D:\AYM Programming\Prog&Files\AymanFreelance.PL\AymanFreelance.BLL\obj\Release\net9.0\AymanFreelance.BLL.GeneratedMSBuildEditorConfig.editorconfig
+D:\AYM Programming\Prog&Files\AymanFreelance.PL\AymanFreelance.BLL\obj\Release\net9.0\AymanFreelance.BLL.AssemblyInfoInputs.cache
+D:\AYM Programming\Prog&Files\AymanFreelance.PL\AymanFreelance.BLL\obj\Release\net9.0\AymanFreelance.BLL.AssemblyInfo.cs
+D:\AYM Programming\Prog&Files\AymanFreelance.PL\AymanFreelance.BLL\obj\Release\net9.0\AymanFreelance.BLL.csproj.CoreCompileInputs.cache
+D:\AYM Programming\Prog&Files\AymanFreelance.PL\AymanFreelance.BLL\obj\Release\net9.0\AymanFre.446B27C9.Up2Date
+D:\AYM Programming\Prog&Files\AymanFreelance.PL\AymanFreelance.BLL\obj\Release\net9.0\AymanFreelance.BLL.dll
+D:\AYM Programming\Prog&Files\AymanFreelance.PL\AymanFreelance.BLL\obj\Release\net9.0\refint\AymanFreelance.BLL.dll
+D:\AYM Programming\Prog&Files\AymanFreelance.PL\AymanFreelance.BLL\obj\Release\net9.0\AymanFreelance.BLL.pdb
+D:\AYM Programming\Prog&Files\AymanFreelance.PL\AymanFreelance.BLL\obj\Release\net9.0\ref\AymanFreelance.BLL.dll

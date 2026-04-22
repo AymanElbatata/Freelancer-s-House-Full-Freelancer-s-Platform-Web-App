@@ -1,0 +1,56 @@
+﻿@model AymanFreelance.PL.Models.Search_VM
+
+@{
+    ViewData["Title"] = "Projects";
+}
+
+<style>
+    .project-card {
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        transition: transform 0.3s ease-in-out;
+    }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+        }
+
+    .project-image {
+        height: 200px;
+        object-fit: cover;
+        width: 100%;
+    }
+</style>
+<div class="container">
+
+    @if (Model.ProjectTBL_VM.Count() > 0)
+    {
+@*         <h2 class="text-center mb-5">@Model.ProductTBL_VM.Count() Projects</h2>
+ *@        <div class="row">
+            @foreach (var project in Model.ProjectTBL_VM)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card project-card">
+                        @if (string.IsNullOrEmpty(project.Image))
+                            project.Image = "ProjectEmpty.jpg";
+
+                        <img src="~/Images/Project/@project.Image" class="project-image" alt="@project.Name" />
+
+                        <div class="card-body">
+                            <h5 class="card-title">Name: @project.Name</h5>
+                            <p class="card-text">Code: @project.HashCode</p>
+                            <p class="card-text">Client: @project.ProjectOwnerTBL.UserName</p>
+                            <p class="card-text"><strong>Freelancer:</strong> @(project.ProjectFreelancerTBL?.UserName ?? "Not assigned")</p>
+                            <a asp-controller="Home" asp-action="WhoisProject" asp-route-ProjectId="@project.ID" class="btn btn-primary">Read More</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <h2 class="text-center mb-5">There are No Projects...</h2>
+    }
+</div>

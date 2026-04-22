@@ -1,0 +1,57 @@
+﻿@model AymanFreelance.PL.Models.Index_VM
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<!-- Hero Section -->
+<section class="hero">
+    <h1>Find the best freelancers for your next project</h1>
+</section>
+
+<style>
+    .project-card {
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        transition: transform 0.3s ease-in-out;
+    }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+        }
+
+    .project-image {
+        height: 200px;
+        object-fit: cover;
+        width: 100%;
+    }
+</style>
+<div class="container">
+
+    @if (Model.ProductTBL_VM.Count() > 0)
+    {
+        <h2 class="text-center mb-5">Recent Projects</h2>
+        <div class="row">
+            @foreach (var project in Model.ProductTBL_VM)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card project-card">
+                        @if (string.IsNullOrEmpty(project.Image))
+                            project.Image = "ProjectEmpty.jpg";
+
+                        <img src="~/Images/Project/@project.Image" class="project-image" alt="@project.Name" />
+
+                        <div class="card-body">
+                            <h5 class="card-title">Name: @project.Name</h5>
+                            <p class="card-text">Code: @project.HashCode</p>
+                            <p class="card-text">Client: @project.ProjectOwnerTBL.UserName</p>
+                            <p class="card-text">Freelancer: @(project.ProjectFreelancerTBL?.UserName ?? "Not assigned")</p>
+                            <a asp-controller="Home" asp-action="WhoisProject" asp-route-ProjectId="@project.ID" class="btn btn-primary">Read More</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

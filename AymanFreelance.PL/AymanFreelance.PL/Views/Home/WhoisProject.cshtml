@@ -1,0 +1,306 @@
+﻿@using AymanFreelance.BLL.Interfaces
+@using Microsoft.AspNetCore.Identity
+@inject IUnitOfWork UnitOfWork;
+
+@model AymanFreelance.PL.Models.WhoisProject_VM
+
+@{
+    ViewData["Title"] = "Project";
+}
+
+<style>
+    .project-details {
+        background: #f5f7fa;
+        min-height: 100vh;
+        padding: 60px 15px;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .project-container {
+        max-width: 1000px;
+        margin: auto;
+        background: #fff;
+        border-radius: 18px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+        overflow: hidden;
+    }
+
+    .project-image img {
+        width: 100%;
+        height: 380px;
+        object-fit: cover;
+        border-bottom: 4px solid #eee;
+    }
+
+    .project-content {
+        padding: 35px;
+    }
+
+        .project-content h1 {
+            font-size: 30px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #222;
+        }
+
+        .project-content .description {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.7;
+            margin-bottom: 30px;
+        }
+
+    .project-info {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px 25px;
+        font-size: 15px;
+        color: #333;
+        margin-bottom: 40px;
+    }
+
+    .applications {
+        margin-top: 40px;
+    }
+
+        .applications h2 {
+            font-size: 22px;
+            margin-bottom: 20px;
+            color: #444;
+            border-left: 4px solid #007bff;
+            padding-left: 10px;
+        }
+
+    /* Freelancer cards */
+    .application-card {
+        background: #f9fafc;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        transition: transform 0.2s ease-in-out;
+    }
+
+        .application-card:hover {
+            transform: translateY(-5px);
+        }
+
+    .freelancer-header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 15px;
+    }
+
+    .freelancer-photo {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid #ddd;
+    }
+
+    .freelancer-name {
+        font-weight: 600;
+        font-size: 16px;
+        color: #222;
+        margin: 0;
+    }
+
+    .freelancer-sub {
+        font-size: 14px;
+        color: #666;
+        margin: 0;
+    }
+
+    .freelancer-details p {
+        font-size: 15px;
+        color: #444;
+        margin-bottom: 8px;
+    }
+
+    .new-application {
+        margin-top: 40px;
+        padding: 25px;
+        background: #f9fafd;
+        border-radius: 12px;
+        box-shadow: 0 3px 12px rgba(0,0,0,0.05);
+    }
+
+        .new-application h3 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #444;
+        }
+
+    .form-control {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-size: 15px;
+        transition: border-color 0.2s;
+    }
+
+        .form-control:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+    .btn-primary {
+        display: inline-block;
+        padding: 12px 25px;
+        font-size: 16px;
+        font-weight: 600;
+        color: #fff;
+        background: linear-gradient(135deg, #007bff, #0056d2);
+        border-radius: 30px;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease-in-out;
+    }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #0056d2, #003f9e);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(0, 123, 255, 0.4);
+        }
+
+    .hired-label {
+        margin-top: 10px;
+        padding: 6px 14px;
+        border-radius: 8px;
+        background: #28a745;
+        color: #fff;
+        font-weight: 500;
+        display: inline-block;
+    }
+</style>
+
+<section class="project-details">
+    <div class="project-container">
+
+        <!-- Project Image -->
+        <div class="project-image">
+            @if (string.IsNullOrEmpty(Model.ProjectTBL_VM.Image))
+                Model.ProjectTBL_VM.Image = "ProjectEmpty.jpg";
+
+            <img src="~/Images/Project/@Model.ProjectTBL_VM.Image" class="project-image" alt="@Model.ProjectTBL_VM.Image" />
+
+        </div>
+
+        <!-- Project Content -->
+        <div class="project-content">
+            <h1>@Model.ProjectTBL_VM.Name</h1>
+            <p class="description">@Model.ProjectTBL_VM.Description</p>
+
+            <div class="project-info">
+                <div><strong>Code:</strong> @Model.ProjectTBL_VM.HashCode</div>
+                <div><strong>Status:</strong> @(Model.ProjectTBL_VM.DateOfDelivery != null && Model.ProjectTBL_VM.DateOfDelivery < DateTime.Now ? "Delivered ✅" : "In Progress ⏳")</div>
+                <div><strong>Owner:</strong> <a class="text-black text-decoration-none" asp-controller="Home" asp-action="WhoisFreelancerClient" asp-route-UserName="@Model.ProjectTBL_VM.ProjectOwnerTBL?.UserName">@Model.ProjectTBL_VM.ProjectOwnerTBL?.UserName</a> </div>
+                <div><strong>Delivery days:</strong> @Model.ProjectTBL_VM.RequiredDaysOfDelivery days</div>
+                <div><strong>Total Cost:</strong> $@Model.ProjectTBL_VM.TotalCost</div>
+                <div><strong>Advance Payment:</strong> $@Model.ProjectTBL_VM.PaymentInAdvance</div>
+                <div><strong>Creation Date:</strong> @(Model.ProjectTBL_VM.CreationDate?.ToString("dd MMM yyyy") ?? "Not specific")</div>
+                <div><strong>Freelancer:</strong>  @(Model.ProjectTBL_VM.ProjectFreelancerTBL?.UserName ?? "Not assigned")</div>
+                <div><strong>Start Work:</strong> @(Model.ProjectTBL_VM.DateOfStartWork?.ToString("dd MMM yyyy") ?? "Not specific")</div>
+                <div><strong>Delivery Date:</strong> @(Model.ProjectTBL_VM.DateOfDelivery?.ToString("dd MMM yyyy") ?? "Not specific")</div>
+@*                 <div><strong>Advance Paid:</strong> @(Model.ProjectTBL_VM.IsPaymentInAdvancePaid ? "Yes ✅" : "Not yet ❌")</div>
+                <div><strong>Is Completed:</strong> @(Model.ProjectTBL_VM.IsDelivered ? "Yes ✅" : "Not yet ❌")</div>
+ *@            </div>
+
+            <!-- Applications -->
+            <div class="applications">
+                <h2>Freelancer Applications</h2>
+
+                @if (Model.ProjectApplicationTBL_VM.Count > 0)
+                {
+                    @foreach (var item in Model.ProjectApplicationTBL_VM)
+                    {
+                        <div class="application-card">
+                            <div class="freelancer-header">
+                                @if (string.IsNullOrEmpty(item.AppUserWhoWrote.PersonalImage))
+                                    item.AppUserWhoWrote.PersonalImage = "FreelancerEmpty.png";
+
+                                <img class="freelancer-photo"
+                                     src="~/Images/Freelancer/@item.AppUserWhoWrote.PersonalImage"
+                                     alt="@item.AppUserWhoWrote.UserName" />
+                                <div>
+                                    <p class="freelancer-name"> <a class="text-black text-decoration-none" asp-controller="Home" asp-action="WhoisFreelancerClient" asp-route-UserName="@item.AppUserWhoWrote.UserName">@item.AppUserWhoWrote.UserName</a></p>
+                                    <p class="freelancer-sub">@((item.DaysOfDelivery ?? 0)) days • $@((item.Cost ?? 0))</p>
+                                    <p class="freelancer-sub">@(item.CreationDate?.ToString("dd MMM yyyy") ?? "Not specific")</p>
+                                </div>
+                            </div>
+
+                            <div class="freelancer-details">
+                                <p><strong>In advance:</strong> $@(item.PaymentInAdvance ?? 0)</p>
+                                <p><strong>Comment:</strong> @(item.Message ?? "Not specific")</p>
+                            </div>
+                            @if (Model.ProjectTBL_VM.ProjectFreelancerTBLId != null && item.AppUserWhoWroteId == Model.ProjectTBL_VM.ProjectFreelancerTBLId)
+                            {
+                                <span class="hired-label">✅ This freelancer is hired for this task</span>
+                            }
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p> No applications yet. Be the first to apply!</p>
+                }
+
+                @if (UnitOfWork.SignInManager.IsSignedIn(User))
+                {
+                    if (User.IsInRole("Freelancer") && Model.HasAppliedBefore == false && Model.ProjectTBL_VM.ProjectFreelancerTBLId == null)
+                    {
+                        <!-- New Application Form -->
+                        <div class="new-application">
+                            <h3>➕ Submit Your Application</h3>
+                            <form asp-controller="Home" asp-action="FreelancerSubmitNewOfferforProject" method="post">
+                                <input type="hidden" name="ProjectId" value="@Model.ProjectTBL_VM.ID" />
+
+                                <div class="form-group">
+                                    <label for="Cost">Cost ($)</label>
+                                    <input type="number" class="form-control" name="Cost" required />
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="PaymentInAdvance">Advance Payment ($)</label>
+                                    <input type="number" class="form-control" name="PaymentInAdvance" required />
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="DaysOfDelivery">Delivery Time (days)</label>
+                                    <input type="number" class="form-control" name="DaysOfDelivery" required />
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="Message">Message</label>
+                                    <textarea class="form-control" name="Message" rows="3" required></textarea>
+                                </div>
+
+                                <button type="submit" class="btn-primary">Submit Application</button>
+                            </form>
+                        </div>
+                    }
+                                   
+                }
+                else
+                {
+                    <p> <a class="text-black text-decoration-none" asp-controller="Account" asp-action="Login">Do you want to write, Login First as freelancer!</a></p>
+                }
+            </div>
+        </div>
+    </div>
+</section>

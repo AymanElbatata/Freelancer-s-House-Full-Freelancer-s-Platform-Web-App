@@ -1,0 +1,202 @@
+﻿@model AymanFreelance.PL.Models.WhoisFreelancerClient_VM
+
+@{
+    ViewData["Title"] = "Search";
+}
+<style>
+    .user-card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        background: #fff;
+        border-radius: 18px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .user-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.15);
+        }
+
+    .user-card-header {
+        height: 160px;
+        background: linear-gradient(135deg, #2c3e50, #3498db, black);
+        position: relative;
+    }
+
+    .user-avatar {
+        position: absolute;
+        top: 100px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 140px;
+        height: 140px;
+        border-radius: 50%;
+        border: 6px solid #fff;
+        object-fit: cover;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        background: #fff;
+    }
+
+    .user-card-body {
+        padding: 90px 25px 30px;
+        text-align: center;
+    }
+
+    .user-name {
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 6px;
+    }
+
+    .user-username {
+        font-size: 1rem;
+        color: #777;
+        margin-bottom: 20px;
+    }
+
+    .user-info {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 10px;
+        font-size: 1rem;
+        color: #444;
+        text-align: left;
+        margin-top: 15px;
+    }
+
+        .user-info p {
+            margin: 0;
+        }
+
+        .user-info strong {
+            color: #2c3e50;
+        }
+
+    .rating-box {
+        margin-top: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        font-size: 1rem;
+        color: #666;
+    }
+
+        .rating-box i {
+            color: #f1c40f;
+            font-size: 1.2rem;
+        }
+
+        .rating-box .empty-star {
+            color: #ccc !important;
+        }
+
+    /* Responsive */
+    @@media (max-width: 576px) {
+        .user-avatar
+
+    {
+        width: 110px;
+        height: 110px;
+        top: 120px;
+    }
+
+    .user-card-body {
+        padding: 100px 20px 25px;
+    }
+
+    .user-name {
+        font-size: 1.3rem;
+    }
+
+    }
+</style>
+
+<div class="container">
+    @if (Model.UserTBL_VM != null)
+    {
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6 mb-4">
+                <div class="user-card">
+                    <div class="user-card-header"></div>
+                    @if (Model.UserTBL_VM.Role == "Freelancer")
+                    {
+                        @if (string.IsNullOrEmpty(Model.UserTBL_VM.PersonalImage))
+                            Model.UserTBL_VM.PersonalImage = "FreelancerEmpty.png";
+                        <img src="~/Images/Freelancer/@Model.UserTBL_VM.PersonalImage" alt="@Model.UserTBL_VM.UserName" class="user-avatar" />
+                    }
+                    else if (Model.UserTBL_VM.Role == "SponsorClient")
+                    {
+                        @if (string.IsNullOrEmpty(Model.UserTBL_VM.PersonalImage))
+                            Model.UserTBL_VM.PersonalImage = "ClientEmpty.png";
+                        <img src="~/Images/Client/@Model.UserTBL_VM.PersonalImage" alt="@Model.UserTBL_VM.UserName" class="user-avatar" />
+                    }
+
+                    <div class="user-card-body">
+                        <h3 class="user-name">@Model.UserTBL_VM.FirstName @Model.UserTBL_VM.LastName</h3>
+                        <p class="user-username">@Model.UserTBL_VM.ProfessionTBL.Name</p>
+
+                        <div class="user-info">
+                            <p><strong>Code:</strong> @Model.UserTBL_VM.UserName</p>
+                            <p><strong>Email:</strong> @Model.UserTBL_VM.Email</p>
+                            <p><strong>Country:</strong> @Model.UserTBL_VM.CountryTBL.Name</p>
+                            <p><strong>Phone:</strong> @Model.UserTBL_VM.Phone</p>
+                            @if (Model.UserTBL_VM.Address != null)
+                            {
+                                <p><strong>Address:</strong> @Model.UserTBL_VM.Address</p>
+                            }
+                            @if (Model.UserTBL_VM.Description != null)
+                            {
+                                <p><strong>Description:</strong> @Model.UserTBL_VM.Description</p>
+                            }
+                        </div>
+
+                        @if (Model.UserTBL_VM.Role == "Freelancer")
+                        {
+                            <div class="rating-box">
+                                @{
+                                    var ratingcollection = Model.UserTBL_VM.FreelancerRatingTBL_VM.ToList();
+
+                                    double avgRating = 0;
+                                    int totalRatings = ratingcollection.Count;
+
+                                    if (totalRatings > 0)
+                                    {
+                                        avgRating = Math.Round(ratingcollection.Average(r => r.Stars), 1);
+                                    }
+
+                                    int fullStars = (int)Math.Floor(avgRating);
+                                    bool halfStar = (avgRating - fullStars) >= 0.5;
+                                }
+
+                                <span>
+                                    @for (int i = 1; i <= fullStars; i++)
+                                    {
+                                        <i class="fas fa-star"></i>
+                                    }
+                                    @if (halfStar)
+                                    {
+                                        <i class="fas fa-star-half-alt"></i>
+                                    }
+                                    @for (int i = fullStars + (halfStar ? 1 : 0); i < 5; i++)
+                                    {
+                                        <i class="far fa-star empty-star"></i>
+                                    }
+                                </span>
+                                <span>@ratingcollection.Count reviews</span>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <h2 class="text-center mb-5">There is No Client...</h2>
+    }
+</div>

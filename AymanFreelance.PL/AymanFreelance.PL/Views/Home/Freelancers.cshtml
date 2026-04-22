@@ -1,0 +1,93 @@
+﻿@model AymanFreelance.PL.Models.Search_VM
+
+@{
+    ViewData["Title"] = "Freelancers";
+}
+<style>
+    .project-card {
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        transition: transform 0.3s ease-in-out;
+    }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+        }
+
+    .project-image {
+        height: 200px;
+        object-fit: cover;
+        width: 100%;
+    }
+</style>
+
+<div class="container">
+
+    @if (Model.Freelancers_VM.Count() > 0)
+    {
+       <div class="row">
+            @foreach (var user in Model.Freelancers_VM)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card project-card">
+                        @if (string.IsNullOrEmpty(user.PersonalImage))
+                            user.PersonalImage = "FreelancerEmpty.png";
+
+                        <img src="~/Images/Freelancer/@user.PersonalImage" class="project-image" alt="@user.UserName" />
+
+                        <div class="card-body">
+                            <h5 class="card-title">@user.FirstName @user.LastName</h5>
+                            <p class="card-text">Job: @user.ProfessionTBL.Name</p>
+                            <p class="card-text">Code: @user.UserName</p>
+                            <p class="card-text">Email: @user.Email</p>
+                            <p class="card-text">Country: @user.CountryTBL.Name</p>
+                            <p class="card-text">Phone: @user.Phone</p>
+                            <div class="product-rating">
+                                @{
+                                    var ratingcollection = Model.Freelancers_VM.Where(a=>a.ID == user.ID).FirstOrDefault()
+                                    .FreelancerRatingTBL_VM.ToList();
+
+                                    double avgRating = 0;
+                                    int totalRatings = ratingcollection.Count;
+
+                                    if (totalRatings > 0)
+                                    {
+                                        avgRating = Math.Round(ratingcollection.Average(r => r.Stars), 1);
+                                    }
+
+                                    int fullStars = (int)Math.Floor(avgRating);
+                                    bool halfStar = (avgRating - fullStars) >= 0.5;
+                                }
+                                <span>
+                                    @for (int i = 1; i <= fullStars; i++)
+                                    {
+                                        <i class="fas fa-star full-star"></i>
+
+                                    }
+                                    @if (halfStar)
+                                    {
+                                        <i class="fas fa-star-half-alt half-star"></i>
+
+                                    }
+                                    @for (int i = fullStars + (halfStar ? 1 : 0); i < 5; i++)
+                                    {
+                                        <i class="far fa-star empty-star"></i>
+                                    }
+                                </span>
+                                <span>@ratingcollection.Count ratings</span>
+
+                            </div>
+                            <a asp-controller="Home" asp-action="WhoisFreelancerClient" asp-route-UserName="@user.UserName" class="btn btn-primary">Read More</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <h2 class="text-center mb-5">There are No Freelancers...</h2>
+    }
+    
+</div>

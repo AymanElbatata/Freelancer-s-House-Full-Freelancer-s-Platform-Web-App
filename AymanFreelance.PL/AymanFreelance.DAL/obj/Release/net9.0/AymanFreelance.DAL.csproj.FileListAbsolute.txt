@@ -1,0 +1,14 @@
+D:\AYM Programming\Prog&Files\AymanFreelance.PL\AymanFreelance.DAL\bin\Release\net9.0\AymanFreelance.DAL.deps.json
+D:\AYM Programming\Prog&Files\AymanFreelance.PL\AymanFreelance.DAL\bin\Release\net9.0\AymanFreelance.DAL.runtimeconfig.json
+D:\AYM Programming\Prog&Files\AymanFreelance.PL\AymanFreelance.DAL\bin\Release\net9.0\AymanFreelance.DAL.dll
+D:\AYM Programming\Prog&Files\AymanFreelance.PL\AymanFreelance.DAL\bin\Release\net9.0\AymanFreelance.DAL.pdb
+D:\AYM Programming\Prog&Files\AymanFreelance.PL\AymanFreelance.DAL\obj\Release\net9.0\AymanFreelance.DAL.csproj.AssemblyReference.cache
+D:\AYM Programming\Prog&Files\AymanFreelance.PL\AymanFreelance.DAL\obj\Release\net9.0\AymanFreelance.DAL.GeneratedMSBuildEditorConfig.editorconfig
+D:\AYM Programming\Prog&Files\AymanFreelance.PL\AymanFreelance.DAL\obj\Release\net9.0\AymanFreelance.DAL.AssemblyInfoInputs.cache
+D:\AYM Programming\Prog&Files\AymanFreelance.PL\AymanFreelance.DAL\obj\Release\net9.0\AymanFreelance.DAL.AssemblyInfo.cs
+D:\AYM Programming\Prog&Files\AymanFreelance.PL\AymanFreelance.DAL\obj\Release\net9.0\AymanFreelance.DAL.csproj.CoreCompileInputs.cache
+D:\AYM Programming\Prog&Files\AymanFreelance.PL\AymanFreelance.DAL\obj\Release\net9.0\AymanFreelance.DAL.dll
+D:\AYM Programming\Prog&Files\AymanFreelance.PL\AymanFreelance.DAL\obj\Release\net9.0\refint\AymanFreelance.DAL.dll
+D:\AYM Programming\Prog&Files\AymanFreelance.PL\AymanFreelance.DAL\obj\Release\net9.0\AymanFreelance.DAL.pdb
+D:\AYM Programming\Prog&Files\AymanFreelance.PL\AymanFreelance.DAL\obj\Release\net9.0\AymanFreelance.DAL.genruntimeconfig.cache
+D:\AYM Programming\Prog&Files\AymanFreelance.PL\AymanFreelance.DAL\obj\Release\net9.0\ref\AymanFreelance.DAL.dll

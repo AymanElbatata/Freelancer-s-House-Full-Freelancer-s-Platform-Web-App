@@ -1,0 +1,59 @@
+﻿@model AymanFreelance.PL.Models.Search_VM
+
+@{
+    ViewData["Title"] = "Clients";
+}
+
+<style>
+    .project-card {
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        transition: transform 0.3s ease-in-out;
+    }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+        }
+
+    .project-image {
+        height: 200px;
+        object-fit: cover;
+        width: 100%;
+    }
+</style>
+<div class="container">
+
+    @if (Model.Clients_VM.Count() > 0)
+    {
+      <div class="row">
+            @foreach (var user in Model.Clients_VM)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card project-card">
+                        @if (string.IsNullOrEmpty(user.PersonalImage))
+                            user.PersonalImage = "ClientEmpty.png";
+
+                        <img src="~/Images/Client/@user.PersonalImage" class="project-image" alt="@user.UserName" />
+
+                        <div class="card-body">
+                            <h5 class="card-title">@user.FirstName @user.LastName</h5>
+                            <p class="card-text">Job: @user.ProfessionTBL.Name</p>
+                            <p class="card-text">Code: @user.UserName</p>
+                            <p class="card-text">Email: @user.Email</p>
+                            <p class="card-text">Country: @user.CountryTBL.Name</p>
+                            <p class="card-text">Phone: @user.Phone</p>
+                            <a asp-controller="Home" asp-action="WhoisFreelancerClient" asp-route-UserName="@user.UserName" class="btn btn-primary">Read More</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <h2 class="text-center mb-5">There are No Clients...</h2>
+    }
+
+
+</div>

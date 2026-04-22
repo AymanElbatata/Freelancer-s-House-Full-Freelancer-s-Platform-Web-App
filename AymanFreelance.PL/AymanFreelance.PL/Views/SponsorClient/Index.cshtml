@@ -1,0 +1,31 @@
+﻿@{
+    ViewData["Title"] = "Client Panel";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-lg border-0 rounded-3">
+                <div class="card-body p-5 text-center">
+                    <h2 class="fw-bold mb-4">👋 Welcome, Client!</h2>
+                    <p class="text-muted mb-4">
+                        Manage your projects easily from your client dashboard.
+                        You can create new projects and track their progress here.
+                    </p>
+
+                    <a asp-controller="SponsorClient" asp-action="AddNewProject" class="btn btn-primary btn-lg px-4 py-2 rounded-pill shadow-sm">
+                        ➕ Add New Project
+                    </a>
+
+                    <hr class="my-4" />
+
+                    <div class="d-flex justify-content-around">
+                        <a asp-controller="SponsorClient" asp-action="Projects" class="btn btn-outline-secondary rounded-pill">
+                            📂 View My Projects
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

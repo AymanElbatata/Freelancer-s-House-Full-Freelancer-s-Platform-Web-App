@@ -1,0 +1,145 @@
+﻿@using AymanFreelance.BLL.Interfaces
+@using Microsoft.AspNetCore.Identity
+
+@inject IUnitOfWork UnitOfWork;
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#ff6b8b">
+    <title>@ViewData["Title"] - Freelancer's' House</title>
+
+
+    <meta name="description" content="Freelancer's House - online work." />
+    <meta name="keywords" content="Freelancer, online work, project, freelancer, work remotely, Freelancer's House" />
+    <meta name="author" content="Freelancer's' House" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://FreelancerHouse.runasp.net/">
+
+    <!-- Open Graph (Facebook & LinkedIn) -->
+    <meta property="og:title" content="Legend shop - Online Store" />
+    <meta property="og:description" content="Shop with us - Legend shop - online store." />
+    <meta property="og:image" content="https://FreelancerHouse.runasp.net/images/main/Logo.png" />
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:url" content="https://FreelancerHouse.runasp.net/" />
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="ms-icon-144x144.png">
+    <meta property="og:type" content="website" />
+
+    <!-- Twitter Cards -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Freelancer's House - Online Work" />
+    <meta name="twitter:description" content="Work with us - Freelancer's House - online work." />
+    <meta name="twitter:image" content="~/Images/Main/Logo.png" />
+
+
+    <!-- Favicon  & Manifest -->
+    <link rel="icon" type="image/x-icon" href="~/favicon_io/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="manifest" href="~/favicon_io/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#ff6b8b">
+    <link rel="manifest" href="~/favicon_io/site.webmanifest">
+    <meta name="theme-color" content="#ffffff">
+
+
+    <script type="importmap"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    @RenderSection("Styles", required: false)
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark shadow-sm">
+        <div class="container-fluid px-3">
+            <a class="navbar-brand fw-bold" href="/">Freelancer's House</a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarNav" aria-controls="navbarNav"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Right side -->
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Clients">Clients</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Projects">Projects</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Freelancers">Freelancers</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="AboutUs">About</a></li>
+                </ul>
+
+                <!-- Auth -->
+                <ul class="navbar-nav ms-auto">
+                    @if (UnitOfWork.SignInManager.IsSignedIn(User))
+                    {
+                        <li class="nav-item">
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <a class="nav-link" asp-controller="Admin" asp-action="Index">Hello, @UnitOfWork.UserManager.GetUserName(User)</a>
+                            }
+                            else if (User.IsInRole("Freelancer"))
+                            {
+                                <a class="nav-link" asp-controller="Freelancer" asp-action="Index">Hello, @UnitOfWork.UserManager.GetUserName(User)</a>
+                            }
+                            else
+                            {
+                                <a class="nav-link" asp-controller="SponsorClient" asp-action="Index">Hello, @UnitOfWork.UserManager.GetUserName(User)</a>
+                            }
+                        </li>
+                       
+                        <li class="nav-item">
+@*                             <form method="get" asp-controller="Account" asp-action="Logout" class="d-inline">
+                                <button class="btn btn-sm btn-outline-light mt-2 mt-lg-0">Logout</button>
+                            </form> *@
+                            <a class="nav-link" asp-controller="Account" asp-action="Logout">Logout</a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="Login">Login</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="Register">Sign Up</a></li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Search Bar -->
+    <section class="bg-light py-3 shadow-sm">
+        <div class="container">
+            <form method="get" asp-controller="Home" asp-action="Search" class="d-flex search-bar">
+                <input class="form-control me-2" type="search" id="MainSearchWord" name="MainSearchWord" placeholder="Search for projects, clients or freelancers..." required />
+                <button type="submit" class="btn btn-warning"><i class="fas fa-search"></i></button>
+            </form>
+        </div>
+    </section>
+
+
+    <!-- Main Content -->
+    <main class="container py-4 flex-grow-1">
+        @RenderBody()
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-light py-4 mt-auto">
+        <div class="container text-center">
+            <p class="mb-1">© @DateTime.Now.Year Freelancer's House - All rights reserved.</p>
+            <a href="https://payhip.com/b/DOqvI" class="mx-2">Buy it</a>
+        </div>
+    </footer>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

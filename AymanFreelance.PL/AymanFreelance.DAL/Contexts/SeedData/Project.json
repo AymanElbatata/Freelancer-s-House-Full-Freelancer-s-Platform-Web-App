@@ -1,0 +1,39 @@
+[
+  {
+    "Name": "Project1",
+    "Image": "ProjectEmpty.jpg",
+    "Description": "This is a sample product description 1.",
+    "RequiredDaysOfDelivery": 3,
+    "TotalCost": 500,
+    "PaymentInAdvance": 100,
+    "HashCode": "1011201"
+  },
+
+  {
+    "Name": "Project2",
+    "Image": "ProjectEmpty.jpg",
+    "Description": "This is a sample product description 2.",
+    "RequiredDaysOfDelivery": 4,
+    "TotalCost": 600,
+    "PaymentInAdvance": 200,
+    "HashCode": "1011202"
+  },
+  {
+    "Name": "Project3",
+    "Image": "ProjectEmpty.jpg",
+    "Description": "This is a sample product description 3.",
+    "RequiredDaysOfDelivery": 5,
+    "TotalCost": 700,
+    "PaymentInAdvance": 300,
+    "HashCode": "1011203"
+  },
+  {
+    "Name": "Project4",
+    "Image": "ProjectEmpty.jpg",
+    "Description": "This is a sample product description 4.",
+    "RequiredDaysOfDelivery": 6,
+    "TotalCost": 800,
+    "PaymentInAdvance": 400,
+    "HashCode": "1011204"
+  }
+]
