@@ -63,7 +63,6 @@ This project is under active development and continuous improvement.
 
 🎯 Why Choose Freelancer House?
 
-⏱️ Save months of development
 📊 Organize freelance work professionally
 🧱 Built with scalable architecture
 🚀 Ready for real-world usage
