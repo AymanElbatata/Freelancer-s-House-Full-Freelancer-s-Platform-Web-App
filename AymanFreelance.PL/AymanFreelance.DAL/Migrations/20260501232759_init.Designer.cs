@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AymanFreelance.DAL.Migrations
 {
     [DbContext(typeof(AymanFreelanceDbContext))]
-    [Migration("20251214153821_init")]
+    [Migration("20260501232759_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -150,9 +150,6 @@ namespace AymanFreelance.DAL.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.Property<int?>("UserTypeTBLId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CountryTBLId");
@@ -168,8 +165,6 @@ namespace AymanFreelance.DAL.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.HasIndex("ProfessionTBLId");
-
-                    b.HasIndex("UserTypeTBLId");
 
                     b.ToTable("Users", "ASecurity");
                 });
@@ -524,37 +519,6 @@ namespace AymanFreelance.DAL.Migrations
                     b.ToTable("ProjectTBLs", "BDataSchema");
                 });
 
-            modelBuilder.Entity("AymanFreelance.DAL.Entities.UserTypeTBL", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
-
-                    b.Property<string>("CreatedUserID")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("CreationDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("LastUpdateDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("LastUpdateUserID")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("UserTypeTBLs", "BDataSchema");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.Property<int>("Id")
@@ -675,17 +639,11 @@ namespace AymanFreelance.DAL.Migrations
                         .WithMany()
                         .HasForeignKey("ProfessionTBLId");
 
-                    b.HasOne("AymanFreelance.DAL.Entities.UserTypeTBL", "UserTypeTBL")
-                        .WithMany()
-                        .HasForeignKey("UserTypeTBLId");
-
                     b.Navigation("CountryTBL");
 
                     b.Navigation("GenderTBL");
 
                     b.Navigation("ProfessionTBL");
-
-                    b.Navigation("UserTypeTBL");
                 });
 
             modelBuilder.Entity("AymanFreelance.DAL.Entities.FreelancerRatingTBL", b =>

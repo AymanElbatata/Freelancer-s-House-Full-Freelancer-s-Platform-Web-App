@@ -250,7 +250,6 @@ namespace AymanFreelance.PL.Controllers
                         CountryTBLId = item.CountryTBLId,
                         GenderTBLId = item.GenderTBLId,
                         ProfessionTBLId = item.ProfessionTBLId,
-                        UserTypeTBLId = item.UserTypeTBLId,
                         PersonalImage = item.PersonalImage,
                         Role = role
                     };

@@ -163,11 +163,7 @@ namespace AymanFreelance.PL.Controllers
                 ProfessionOptions = unitOfWork.ProfessionTBLRepository.GetAllCustomized(
                         filter: a => a.IsDeleted == false)
             .Select(g => new SelectListItem { Value = g.ID.ToString(), Text = g.Name })
-            .ToList(),
-                TypeOptions = unitOfWork.UserTypeTBLRepository.GetAllCustomized(
-                            filter: a => a.IsDeleted == false)
-                .Select(g => new SelectListItem { Value = g.ID.ToString(), Text = g.Name })
-                .ToList()
+            .ToList()
                 };
 
             return View(model);
@@ -192,10 +188,6 @@ namespace AymanFreelance.PL.Controllers
                                 filter: a => a.IsDeleted == false)
                         .Select(g => new SelectListItem { Value = g.ID.ToString(), Text = g.Name, Selected = (g.ID == model.GenderTBLId) })
                         .ToList();
-                    model.TypeOptions = unitOfWork.UserTypeTBLRepository.GetAllCustomized(
-                                    filter: a => a.IsDeleted == false)
-                        .Select(g => new SelectListItem { Value = g.ID.ToString(), Text = g.Name })
-                        .ToList();
                     model.ProfessionOptions = unitOfWork.ProfessionTBLRepository.GetAllCustomized(
                                     filter: a => a.IsDeleted == false)
                         .Select(g => new SelectListItem { Value = g.ID.ToString(), Text = g.Name })
@@ -215,19 +207,14 @@ namespace AymanFreelance.PL.Controllers
                     CountryTBLId = model.CountryTBLId,
                     GenderTBLId = model.GenderTBLId,
                     ActivationCode = unitOfWork.MySPECIALGUID.GetUniqueKey(10),
-                    UserTypeTBLId = model.UserTypeTBLId,
                 };
 
                 // Create the user
                 var result = await unitOfWork.UserManager.CreateAsync(user, model.Password);
-                if (model.UserTypeTBLId == 2)
-                {
-                    await unitOfWork.UserManager.AddToRoleAsync(user, "Freelancer");
-                }
-                else
-                {
-                    await unitOfWork.UserManager.AddToRoleAsync(user, "SponsorClient");
-                }
+
+                string role = model.TypeId == 1 ? "SponsorClient" : "Freelancer";
+                await unitOfWork.UserManager.AddToRoleAsync(user, role);
+
 
                 if (result.Succeeded)
                 {
@@ -268,11 +255,7 @@ namespace AymanFreelance.PL.Controllers
                                 filter: a => a.IsDeleted == false)
                         .Select(g => new SelectListItem { Value = g.ID.ToString(), Text = g.Name, Selected = (g.ID == model.GenderTBLId) })
                         .ToList();
-            model.TypeOptions = unitOfWork.UserTypeTBLRepository.GetAllCustomized(
-                                    filter: a => a.IsDeleted == false)
-                        .Select(g => new SelectListItem { Value = g.ID.ToString(), Text = g.Name })
-                        .ToList();
-
+           
             return View(model);
         }
         #endregion

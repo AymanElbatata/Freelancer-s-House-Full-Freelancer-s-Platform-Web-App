@@ -12,7 +12,6 @@ namespace AymanFreelance.PL.Models
 
         public virtual CountryTBL? CountryTBL { get; set; }
         public virtual GenderTBL? GenderTBL { get; set; }
-        public virtual UserTypeTBL? UserTypeTBL { get; set; }
         public virtual ProfessionTBL? ProfessionTBL { get; set; }
 
 

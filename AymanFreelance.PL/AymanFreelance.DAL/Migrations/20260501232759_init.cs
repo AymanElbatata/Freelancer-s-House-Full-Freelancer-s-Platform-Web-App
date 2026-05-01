@@ -136,48 +136,6 @@ namespace AymanFreelance.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserTypeTBLs",
-                schema: "BDataSchema",
-                columns: table => new
-                {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CreatedUserID = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CreationDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    LastUpdateUserID = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LastUpdateDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserTypeTBLs", x => x.ID);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "RoleClaims",
-                schema: "ASecurity",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_RoleClaims", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_RoleClaims_Roles_RoleId",
-                        column: x => x.RoleId,
-                        principalSchema: "ASecurity",
-                        principalTable: "Roles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Users",
                 schema: "ASecurity",
                 columns: table => new
@@ -185,7 +143,6 @@ namespace AymanFreelance.DAL.Migrations
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     CountryTBLId = table.Column<int>(type: "int", nullable: true),
                     GenderTBLId = table.Column<int>(type: "int", nullable: true),
-                    UserTypeTBLId = table.Column<int>(type: "int", nullable: true),
                     ProfessionTBLId = table.Column<int>(type: "int", nullable: true),
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -233,12 +190,29 @@ namespace AymanFreelance.DAL.Migrations
                         principalSchema: "BDataSchema",
                         principalTable: "ProfessionTBLs",
                         principalColumn: "ID");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RoleClaims",
+                schema: "ASecurity",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RoleClaims", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Users_UserTypeTBLs_UserTypeTBLId",
-                        column: x => x.UserTypeTBLId,
-                        principalSchema: "BDataSchema",
-                        principalTable: "UserTypeTBLs",
-                        principalColumn: "ID");
+                        name: "FK_RoleClaims_Roles_RoleId",
+                        column: x => x.RoleId,
+                        principalSchema: "ASecurity",
+                        principalTable: "Roles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -555,12 +529,6 @@ namespace AymanFreelance.DAL.Migrations
                 column: "ProfessionTBLId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Users_UserTypeTBLId",
-                schema: "ASecurity",
-                table: "Users",
-                column: "UserTypeTBLId");
-
-            migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
                 schema: "ASecurity",
                 table: "Users",
@@ -630,10 +598,6 @@ namespace AymanFreelance.DAL.Migrations
 
             migrationBuilder.DropTable(
                 name: "ProfessionTBLs",
-                schema: "BDataSchema");
-
-            migrationBuilder.DropTable(
-                name: "UserTypeTBLs",
                 schema: "BDataSchema");
         }
     }

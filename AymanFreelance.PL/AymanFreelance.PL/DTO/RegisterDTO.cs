@@ -50,7 +50,7 @@ namespace AymanFreelance.PL.DTO
 
         [Required(ErrorMessage = "Type is required")]
         [Display(Name = "Type")]
-        public int? UserTypeTBLId { get; set; }
+        public int? TypeId { get; set; }
 
         [Required(ErrorMessage = "Type is required")]
         [Display(Name = "Profession")]
@@ -58,7 +58,6 @@ namespace AymanFreelance.PL.DTO
 
         public IEnumerable<SelectListItem> CountryOptions { get; set; } = new List<SelectListItem>();
         public IEnumerable<SelectListItem> GenderOptions { get; set; } = new List<SelectListItem>();
-        public IEnumerable<SelectListItem> TypeOptions { get; set; } = new List<SelectListItem>();
         public IEnumerable<SelectListItem> ProfessionOptions { get; set; } = new List<SelectListItem>();
         public Dictionary<string, string[]>? Errors { get; set; }
 

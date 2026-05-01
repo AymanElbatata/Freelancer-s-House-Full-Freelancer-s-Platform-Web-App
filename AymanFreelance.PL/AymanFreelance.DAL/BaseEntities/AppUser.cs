@@ -12,12 +12,10 @@ namespace AymanFreelance.DAL.BaseEntity
     {
         public int? CountryTBLId { get; set; }
         public int? GenderTBLId { get; set; }
-        public int? UserTypeTBLId { get; set; }
         public int? ProfessionTBLId { get; set; }
 
         public virtual CountryTBL? CountryTBL { get; set; }
         public virtual GenderTBL? GenderTBL { get; set; }
-        public virtual UserTypeTBL? UserTypeTBL { get; set; }
         public virtual ProfessionTBL? ProfessionTBL { get; set; }
 
 

@@ -41,16 +41,16 @@ namespace AymanFreelance.DAL.Contexts
                     }
                     await context.SaveChangesAsync();
                 }
-                if (!context.UserTypeTBLs.Any())
-                {
-                    var UserType = File.ReadAllText("../AymanFreelance.DAL/Contexts/SeedData/UserType.json");
-                    var UserTypeCollection = JsonSerializer.Deserialize<List<UserTypeTBL>>(UserType);
-                    for (int i = 0; i < UserTypeCollection?.Count; i++)
-                    {
-                        context.UserTypeTBLs.Add(UserTypeCollection[i]);
-                    }
-                    await context.SaveChangesAsync();
-                }
+                //if (!context.UserTypeTBLs.Any())
+                //{
+                //    var UserType = File.ReadAllText("../AymanFreelance.DAL/Contexts/SeedData/UserType.json");
+                //    var UserTypeCollection = JsonSerializer.Deserialize<List<UserTypeTBL>>(UserType);
+                //    for (int i = 0; i < UserTypeCollection?.Count; i++)
+                //    {
+                //        context.UserTypeTBLs.Add(UserTypeCollection[i]);
+                //    }
+                //    await context.SaveChangesAsync();
+                //}
                 if (!context.ProfessionTBLs.Any())
                 {
                     var Jobs = File.ReadAllText("../AymanFreelance.DAL/Contexts/SeedData/Profession.json");
@@ -98,7 +98,7 @@ namespace AymanFreelance.DAL.Contexts
                         PhoneNumber = "201284878483",
                         CountryTBLId = 51,
                         GenderTBLId = 1,
-                        ProfessionTBLId = 1,
+                        ProfessionTBLId = 10,
                         Description = "publishing, and web development. Its purpose is to permit a page layout to be designed, independently of the copy that will subsequently populate it, or to demonstrate various fonts of a typeface without meaningful text that could be distracting. Lorem ipsum is typically a corrupted version of De finibus bonorum et malorum"
                     };
                     var user2 = new AppUser
@@ -111,12 +111,10 @@ namespace AymanFreelance.DAL.Contexts
                         IsActivated = true,
                         EmailConfirmed = true,
                         LockoutEnabled = false,
-                        PhoneNumber = "201202025251",
+                        PhoneNumber = "201554820255",
                         CountryTBLId = 50,
-                        //PersonalImage = "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmiro.medium.com%2Fv2%2Fresize%3Afit%3A2400%2F1*6_oHYdP-4Zvszbey6ZBw0w.jpeg&f=1&nofb=1&ipt=c31fc1beaa80865c00250659fa35e753f48e42ead887031d3eeb3663836be094",
-                        UserTypeTBLId = 2,
                         GenderTBLId = 2,
-                        ProfessionTBLId = 10,
+                        ProfessionTBLId = 20,
                         Description = "graphic design, publishing, and web development. Its purpose is to permit a page layout to be designed, independently of the copy that will subsequently populate it, or to demonstrate various fonts of a typeface without meaningful text that could be distracting. Lorem ipsum is typically a corrupted version of De finibus bonorum et malorum"
                     };
 
@@ -132,10 +130,8 @@ namespace AymanFreelance.DAL.Contexts
                         LockoutEnabled = false,
                         PhoneNumber = "201006983906",
                         CountryTBLId = 183,
-                        //PersonalImage = "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimg.freepik.com%2Fpremium-photo%2Fhappy-man-ai-generated-portrait-user-profile_1119669-1.jpg%3Fw%3D2000&f=1&nofb=1&ipt=1ee82eb66f39d2053e71f6681619b1dcfec14f49f43a25836df73b703f9d7b39",
-                        UserTypeTBLId = 1,
                         GenderTBLId = 3,
-                        ProfessionTBLId = 50,
+                        ProfessionTBLId = 30,
                         Description = "Lorem ipsum is a dummy or placeholder text commonly. Its purpose is to permit a page layout to be designed, independently of the copy that will subsequently populate it, or to demonstrate various fonts of a typeface without meaningful text that could be distracting. Lorem ipsum is typically a corrupted version of De finibus bonorum et malorum"
                     };
 
@@ -159,6 +155,7 @@ namespace AymanFreelance.DAL.Contexts
                         var ProjectCollection = JsonSerializer.Deserialize<List<ProjectTBL>>(Projects);
                         for (int i = 0; i < ProjectCollection?.Count; i++)
                         {
+                            ProjectCollection[i].HashCode = "PRJ" + Guid.NewGuid().ToString("N").Substring(0, 7);
                             ProjectCollection[i].ProjectOwnerTBLId = ProjectOwner.Id;
                             //ProjectCollection[i].ProjectFreelancerTBLId = Freelancer.Id;
                             context.ProjectTBLs.Add(ProjectCollection[i]);
@@ -172,7 +169,7 @@ namespace AymanFreelance.DAL.Contexts
                         var ProjectOwner = await userManager.FindByEmailAsync("Ayman_Elbatata@inbox.lt");
                         for (int i = 1; i < 5; i++)
                         {
-                            context.FreelancerRatingTBLs.Add(new FreelancerRatingTBL { AppUserWhoRatedId = ProjectOwner.Id, AppUserWhoIsRatedId = Freelancer.Id, Stars = i, ProjectTBLId = i, ReviewSubject = "Good Product: " + i, ReviewComment = "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book." + i, IsHelpful = (i == 2 || i == 4) ? true : false });
+                            context.FreelancerRatingTBLs.Add(new FreelancerRatingTBL { AppUserWhoRatedId = ProjectOwner.Id, AppUserWhoIsRatedId = Freelancer.Id, Stars = i, ProjectTBLId = i, ReviewSubject = "Good Work: " + i, ReviewComment = "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book." + i, IsHelpful = (i == 2 || i == 4) ? true : false });
                         }
                         await context.SaveChangesAsync();
                     }

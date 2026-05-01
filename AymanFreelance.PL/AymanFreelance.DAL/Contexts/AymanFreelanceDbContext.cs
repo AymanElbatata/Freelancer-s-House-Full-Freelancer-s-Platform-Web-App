@@ -23,7 +23,6 @@ namespace AymanFreelance.DAL.Contexts
         public DbSet<CountryTBL> CountryTBLs { get; set; } 
         public DbSet<EmailTBL> EmailTBLs { get; set; } 
         public DbSet<AppErrorTBL> AppErrorTBLs { get; set; }
-        public DbSet<UserTypeTBL> UserTypeTBLs { get; set; }
         public DbSet<ProjectTBL> ProjectTBLs { get; set; }
         public DbSet<FreelancerRatingTBL> FreelancerRatingTBLs { get; set; }
         public DbSet<ProjectApplicationTBL> ProjectApplicationTBLs { get; set; }
