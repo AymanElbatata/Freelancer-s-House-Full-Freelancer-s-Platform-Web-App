@@ -4,6 +4,21 @@
     ViewData["Title"] = "Update Project";
 }
 
+@if (Model?.Errors != null && Model.Errors.Any())
+{
+    <div class="alert alert-danger">
+        <ul>
+            @foreach (var errorGroup in Model.Errors)
+            {
+                foreach (var msg in errorGroup.Value)
+                {
+                    <li>@msg</li>
+                }
+            }
+        </ul>
+    </div>
+}
+
 @if (Model != null)
 {
     <div class="container mt-5">
@@ -22,6 +37,30 @@
                             @Html.AntiForgeryToken()
                             @Html.HiddenFor(model => model.ID)
 
+                            <!-- Current Project Image Display -->
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">Current Project Image</label>
+                                <div class="border rounded p-3 bg-light text-center">
+                                    @{
+                                        var imageName = string.IsNullOrEmpty(Model.Image) ? "ProjectEmpty.jpg" : Model.Image;
+                                        var imagePath = Url.Content($"~/Images/Project/{imageName}");
+                                    }
+                                    <img src="@imagePath"
+                                         alt="Project Image"
+                                         class="img-fluid rounded"
+                                         style="max-height: 200px; object-fit: contain;"
+                                         onerror="this.onerror=null; this.src='@Url.Content("~/Images/Project/ProjectEmpty.jpg")';" />
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Change Project Image (Optional)</label>
+                                <input type="file"
+                                       name="ProjectImage"
+                                       class="form-control"
+                                       accept="image/*" />
+                                <small class="text-muted">Leave empty to keep current image. Allowed formats: JPG, PNG, WEBP, JPEG</small>
+                            </div>
 
                             <div class="mb-3">
                                 <label asp-for="Name" class="form-label fw-bold"></label>
@@ -33,16 +72,6 @@
                                 <label asp-for="Description" class="form-label fw-bold"></label>
                                 <textarea asp-for="Description" rows="4" class="form-control" placeholder="Enter project description" required></textarea>
                                 <span asp-validation-for="Description" class="text-danger"></span>
-                            </div>
-
-                            <div class="mb-3">
-                                <label class="form-label fw-bold">Project Image</label>
-                                <input type="file"
-                                       name="ProjectImage"
-                                       class="form-control"
-                                       accept="image/*"
-                                       required />
-                                <small class="text-muted">Allowed formats: JPG, PNG, WEBP</small>
                             </div>
 
                             <div class="row">
@@ -69,7 +98,7 @@
                                     ⬅ Back
                                 </a>
                                 <button type="submit" class="btn btn-primary px-5 rounded-pill shadow-sm">
-                                    💾 Save Project
+                                    💾 Save Changes
                                 </button>
                             </div>
                         </form>
@@ -82,10 +111,4 @@
 else
 {
     <h2 class="text-center mb-5">There is no more project!...</h2>
-}
-
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
 }

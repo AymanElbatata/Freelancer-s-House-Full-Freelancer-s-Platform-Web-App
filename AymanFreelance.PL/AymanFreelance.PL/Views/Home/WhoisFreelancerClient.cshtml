@@ -189,6 +189,40 @@
                                 </span>
                                 <span>@ratingcollection.Count reviews</span>
                             </div>
+                            @if (ratingcollection.Any())
+                            {
+                                <div class="mt-4">
+                                    <h6 class="mb-3 fw-bold">All Reviews</h6>
+
+                                    @foreach (var review in ratingcollection)
+                                    {
+                                        <div class="review-card p-3 mb-3">
+
+                                            <!-- Subject + Helpful -->
+                                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                                <strong>@review.ReviewSubject</strong>
+
+                                                <span class="badge @(review.IsHelpful ? "bg-success" : "bg-secondary")">
+                                                    @(review.IsHelpful ? "Helpful 👍" : "Not Helpful 👎")
+                                                </span>
+                                            </div>
+
+                                            <!-- Comment -->
+                                            <p class="mb-0 text-muted">
+                                                @review.ReviewComment
+                                            </p>
+
+                                        </div>
+                                    }
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="text-center mt-3 p-3 border rounded bg-light">
+                                    <i class="fas fa-comment-slash mb-2 text-muted"></i>
+                                    <p class="text-muted mb-0">No reviews yet</p>
+                                </div>
+                            }
                         }
                     </div>
                 </div>

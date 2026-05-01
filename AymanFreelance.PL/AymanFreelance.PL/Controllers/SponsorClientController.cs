@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using AymanFreelance.BLL.Interfaces;
+using AymanFreelance.BLL.Repositories;
 using AymanFreelance.DAL.Entities;
 using AymanFreelance.PL.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -31,7 +32,7 @@ namespace AymanFreelance.PL.Controllers
             return View();
         }
 
-        #region AddNew Project + Edit
+        #region AddNew Project + Edit + RateFreelancer
         public IActionResult AddNewProject()
         {
             return View();
@@ -86,10 +87,7 @@ namespace AymanFreelance.PL.Controllers
                                          p => p.ProjectFreelancerTBL
 
             }).FirstOrDefault();
-            if (string.IsNullOrEmpty(project.ProjectFreelancerTBLId))
-            {
-                data = Mapper.Map<ProjectTBL_VM>(project);
-            }
+            data = Mapper.Map<ProjectTBL_VM>(project);
             return View(data);
         }
 
@@ -101,6 +99,12 @@ namespace AymanFreelance.PL.Controllers
 
                 var project = unitOfWork.ProjectTBLRepository.GetAllCustomized(
                 filter: a => a.IsDeleted == false && a.ID == model.ID).FirstOrDefault();
+
+                if (project.ProjectFreelancerTBLId != null)
+                {
+                    ModelState.AddModelError(string.Empty, "You cannot edit this project because it has been assigned to a freelancer.");
+                    return View(model);
+                }
 
                 if (ProjectImage != null && ProjectImage.Length > 0)
                 {
@@ -123,11 +127,53 @@ namespace AymanFreelance.PL.Controllers
                 project.RequiredDaysOfDelivery = model.RequiredDaysOfDelivery;
                 project.Description = model.Description;
                 project.Name = model.Name;
+                project.PaymentInAdvance = model.PaymentInAdvance;
+                project.LastUpdateDate = DateTime.Now;
                 //project.IsPaymentInAdvancePaid = model.IsPaymentInAdvancePaid;
 
                 unitOfWork.ProjectTBLRepository.Update(project);
                 return RedirectToAction("Projects", "SponsorClient");
             }
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> RateFreelancer(int? ProjectId)
+        {
+            var data = new FreelancerRatingTBL_VM();
+
+            if (ProjectId == 0 || unitOfWork.FreelancerRatingTBLRepository.GetAllCustomized(
+                filter: a => a.IsDeleted == false && a.ProjectTBLId == ProjectId && a.ProjectTBL.ProjectFreelancerTBLId == null, includes: new Expression<Func<FreelancerRatingTBL, object>>[]
+            {
+                                         p => p.ProjectTBL,
+
+            }).Any())
+                return RedirectToAction("Projects", "SponsorClient");
+
+            data.ProjectTBL = unitOfWork.ProjectTBLRepository.GetAllCustomized(
+                filter: a => a.IsDeleted == false && a.ID == ProjectId && a.ProjectFreelancerTBLId != null).FirstOrDefault();
+
+            data.ProjectTBLId = data.ProjectTBL.ID;
+            data.AppUserWhoIsRatedId = data.ProjectTBL.ProjectFreelancerTBLId;
+
+            data.AppUserWhoIsRated = await unitOfWork.UserManager.FindByIdAsync(data.AppUserWhoIsRatedId);
+
+            return View(data);
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RateFreelancer(FreelancerRatingTBL_VM model)
+        {
+            if (ModelState.IsValid)
+            {
+                var newRating = Mapper.Map<FreelancerRatingTBL>(model);
+                newRating.AppUserWhoRatedId = User.FindFirstValue(ClaimTypes.NameIdentifier).ToString();
+                unitOfWork.FreelancerRatingTBLRepository.Add(newRating);
+                return RedirectToAction("Projects", "SponsorClient");
+            }
+
             return View(model);
         }
 

@@ -1,0 +1,291 @@
+﻿@model AymanFreelance.PL.Models.FreelancerRatingTBL_VM
+
+@{
+    ViewData["Title"] = "Rate Freelancer";
+}
+
+<style>
+    .rating-container {
+        max-width: 700px;
+        margin: 0 auto;
+    }
+
+    .star-rating {
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: flex-end;
+        gap: 10px;
+        margin: 20px 0;
+    }
+
+        .star-rating input {
+            display: none;
+        }
+
+        .star-rating label {
+            cursor: pointer;
+            font-size: 40px;
+            color: #ddd;
+            transition: color 0.2s;
+        }
+
+            .star-rating label:hover,
+            .star-rating label:hover ~ label,
+            .star-rating input:checked ~ label {
+                color: #ffc107;
+            }
+
+                .star-rating input:checked ~ label:hover,
+                .star-rating input:checked ~ label:hover ~ label {
+                    color: #ffc107;
+                }
+
+    .rating-card {
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        overflow: hidden;
+    }
+
+    .rating-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 20px;
+    }
+
+    .btn-rating {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        padding: 12px 30px;
+        font-size: 16px;
+        font-weight: 600;
+        border-radius: 25px;
+        transition: transform 0.2s;
+    }
+
+        .btn-rating:hover {
+            transform: translateY(-2px);
+            color: white;
+        }
+
+    .review-textarea {
+        border-radius: 10px;
+        border: 1px solid #ddd;
+        padding: 12px;
+        font-size: 14px;
+    }
+
+        .review-textarea:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+
+    .info-badge {
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+
+    .project-info {
+        border-left: 4px solid #667eea;
+        padding-left: 15px;
+        margin: 15px 0;
+    }
+
+    .project-image-container {
+        text-align: center;
+        margin-bottom: 20px;
+        padding: 10px;
+        background-color: #f8f9fa;
+        border-radius: 10px;
+    }
+
+    .project-image {
+        max-width: 100%;
+        max-height: 200px;
+        object-fit: cover;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .info-row {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 15px;
+    }
+
+    .info-icon {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 50%;
+        color: white;
+    }
+</style>
+
+<div class="container mt-5">
+    <div class="rating-container">
+        <div class="card rating-card">
+            <div class="rating-header text-center">
+                <h2 class="mb-2">
+                    <i class="fas fa-star"></i> Rate Your Freelancer
+                </h2>
+                <p class="mb-0">Your feedback helps others make better decisions</p>
+            </div>
+
+            <div class="card-body p-4">
+                @if (!string.IsNullOrEmpty(Model.ReviewSubject))
+                {
+                    <div class="alert alert-warning text-center">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <strong>You have already rated this freelancer for this project!</strong>
+                        <p class="mt-2 mb-0">You can only rate once per project.</p>
+                        <a asp-controller="SponsorClient" asp-action="Projects" class="btn btn-outline-primary mt-3">
+                            Back to Projects
+                        </a>
+                    </div>
+                }
+                else if (Model.ProjectTBL.DateOfDelivery >= DateTime.Now)
+                {
+                    <div class="alert alert-warning text-center">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <strong>You can rate this freelancer after delivery date!</strong>
+                        <p class="mt-2 mb-0">Delivery date of this project @Model.ProjectTBL.DateOfDelivery.Value.ToString("dd MMM yyyy hh:mm tt").</p>
+                        <a asp-controller="SponsorClient" asp-action="Projects" class="btn btn-outline-primary mt-3">
+                            Back to Projects
+                        </a>
+                    </div>
+                }
+                else
+                {
+                    <div class="info-badge">
+                        <!-- Project Image Display -->
+                        <div class="project-image-container">
+                            @{
+                                var imageName = string.IsNullOrEmpty(Model.ProjectTBL?.Image) ? "ProjectEmpty.jpg" : Model.ProjectTBL.Image;
+                                var imagePath = Url.Content($"~/Images/Project/{imageName}");
+                            }
+                            <img src="@imagePath"
+                                 alt="@Model.ProjectTBL?.Name"
+                                 class="project-image"
+                                 onerror="this.onerror=null; this.src='@Url.Content("~/Images/Project/ProjectEmpty.jpg")';" />
+                            <p class="text-muted mt-2 mb-0">
+                                <small>@Model.ProjectTBL?.Name</small>
+                            </p>
+                        </div>
+
+                        <div class="project-info">
+                            <div class="info-row">
+                                <div class="info-icon">
+                                    <i class="fas fa-project-diagram"></i>
+                                </div>
+                                <div>
+                                    <h6 class="text-primary mb-1">Project Details</h6>
+                                    <p class="mb-1"><strong>Name:</strong> @Model.ProjectTBL?.Name</p>
+                                    <p class="mb-0"><strong>Code:</strong> @Model.ProjectTBL?.HashCode</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="project-info">
+                            <div class="info-row">
+                                <div class="info-icon">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div>
+                                    <h6 class="text-primary mb-1">Freelancer</h6>
+                                    <p class="mb-0"><strong>Name:</strong> @Model.AppUserWhoIsRated?.UserName</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form asp-controller="SponsorClient" asp-action="RateFreelancer" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="@Model.ProjectTBLId" />
+                        <input type="hidden" asp-for="@Model.AppUserWhoIsRatedId" />
+
+                        <div class="form-group mb-4 text-center">
+                            <label class="form-label fw-bold mb-3">Rating <span class="text-danger">*</span></label>
+                            <div class="star-rating d-flex justify-content-center">
+                                <input type="radio" id="star5" name="Stars" value="5" required />
+                                <label for="star5" title="5 stars - Excellent">★</label>
+
+                                <input type="radio" id="star4" name="Stars" value="4" required />
+                                <label for="star4" title="4 stars - Very Good">★</label>
+
+                                <input type="radio" id="star3" name="Stars" value="3" required />
+                                <label for="star3" title="3 stars - Good">★</label>
+
+                                <input type="radio" id="star2" name="Stars" value="2" required />
+                                <label for="star2" title="2 stars - Fair">★</label>
+
+                                <input type="radio" id="star1" name="Stars" value="1" required />
+                                <label for="star1" title="1 star - Poor">★</label>
+                            </div>
+                            <span asp-validation-for="Stars" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group mb-4">
+                            <label asp-for="ReviewSubject" class="form-label fw-bold">Review Subject <span class="text-danger">*</span></label>
+                            <input asp-for="ReviewSubject" class="form-control" placeholder="e.g., Excellent work, On time delivery, etc." required maxlength="100" />
+                            <small class="text-muted">Maximum 100 characters</small>
+                            <span asp-validation-for="ReviewSubject" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group mb-4">
+                            <label asp-for="ReviewComment" class="form-label fw-bold">Your Review <span class="text-danger">*</span></label>
+                            <textarea asp-for="ReviewComment" rows="5" class="form-control review-textarea"
+                                      placeholder="Share your experience working with this freelancer..." required maxlength="500"></textarea>
+                            <small class="text-muted">Maximum 500 characters</small>
+                            <span asp-validation-for="ReviewComment" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group mb-4">
+                            <div class="form-check">
+                                <input asp-for="IsHelpful" class="form-check-input" type="checkbox" id="isHelpful" />
+                                <label class="form-check-label" for="isHelpful">
+                                    <i class="fas fa-thumbs-up"></i> Was this freelancer helpful?
+                                </label>
+                                <small class="text-muted d-block">Check this if you would recommend this freelancer</small>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between gap-3 mt-4">
+                            <a asp-controller="SponsorClient" asp-action="Projects" class="btn btn-outline-secondary px-4 py-2">
+                                <i class="fas fa-arrow-left"></i> Cancel
+                            </a>
+                            <button type="submit" class="btn btn-rating px-5 py-2">
+                                <i class="fas fa-paper-plane"></i> Submit Rating
+                            </button>
+                        </div>
+                    </form>
+                }
+            </div>
+        </div>
+
+        <!-- Rating Guidelines -->
+        <div class="card mt-4 border-0 bg-light">
+            <div class="card-body">
+                <h6 class="text-primary mb-2">
+                    <i class="fas fa-info-circle"></i> Rating Guidelines
+                </h6>
+                <ul class="small text-muted mb-0">
+                    <li>5 Stars: Exceptional work, exceeded expectations</li>
+                    <li>4 Stars: Very good work, met all requirements</li>
+                    <li>3 Stars: Good work, some minor issues</li>
+                    <li>2 Stars: Fair work, significant room for improvement</li>
+                    <li>1 Star: Poor work, did not meet expectations</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

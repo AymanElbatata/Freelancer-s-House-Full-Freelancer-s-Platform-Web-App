@@ -40,5 +40,8 @@ namespace AymanFreelance.PL.Models
         public DateTime? DateOfDelivery { get; set; } = null!;
 
         public int? IncomeProfit { get; set; } = 0;
+
+        public Dictionary<string, string[]>? Errors { get; set; }
+
     }
 }
