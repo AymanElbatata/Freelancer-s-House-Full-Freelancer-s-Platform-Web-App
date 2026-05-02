@@ -1,0 +1,185 @@
+﻿@model AymanFreelance.PL.Models.UserTBL_VM
+
+@{
+    ViewData["Title"] = "Profile";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Edit Profile</h2>
+    <!-- Validation Summary -->
+    <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+
+    <form asp-action="EditProfile" method="post" enctype="multipart/form-data">
+        @Html.AntiForgeryToken()
+
+        <div class="row">
+
+            <!-- LEFT SIDE -->
+            <div class="col-md-6">
+
+                <div class="mb-3">
+                    <label class="form-label">First Name</label>
+                    <input asp-for="FirstName" class="form-control" />
+                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Last Name</label>
+                    <input asp-for="LastName" class="form-control" />
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Phone</label>
+                    <input asp-for="Phone" class="form-control" />
+                    <span asp-validation-for="Phone" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Address</label>
+                    <input asp-for="Address" class="form-control" />
+                    <span asp-validation-for="Address" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Description</label>
+                    <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+
+            </div>
+
+            <!-- RIGHT SIDE -->
+            <div class="col-md-6">
+
+                <!-- Country -->
+                <div class="form-group">
+                    <label asp-for="CountryTBLId" class="form-label"></label>
+                    <select asp-for="CountryTBLId"
+                            asp-items="Model.CountryOptions"
+                            class="form-select select2"
+                            id="countryTBLId">
+                        <option value="">Select Country</option>
+                    </select>
+                    <span asp-validation-for="CountryTBLId" class="text-danger"></span>
+                </div>
+
+                <!-- Gender -->
+                <div class="form-group">
+                    <label asp-for="GenderTBLId" class="form-label"></label>
+                    <select asp-for="GenderTBLId"
+                            asp-items="Model.GenderOptions"
+                            class="form-select select2"
+                            id="genderTBLId">
+                        <option value="">Select Gender</option>
+                    </select>
+                    <span asp-validation-for="GenderTBLId" class="text-danger"></span>
+                </div>
+
+                <!-- Profession -->
+                <div class="form-group">
+                    <label asp-for="ProfessionTBLId" class="form-label"></label>
+                    <select asp-for="ProfessionTBLId"
+                            asp-items="Model.ProfessionOptions"
+                            class="form-select select2"
+                            id="professionTBLId">
+                        <option value="">Select Profession</option>
+                    </select>
+                    <span asp-validation-for="ProfessionTBLId" class="text-danger"></span>
+                </div>
+
+                <!-- Personal Image -->
+                <div class="mb-4 mt-3">
+                    <label class="form-label fw-bold">Profile Image</label>
+
+                    <div class="d-flex align-items-center gap-3">
+
+                        <!-- Old Image (Small preview) -->
+                        <div>
+                            @if (!string.IsNullOrEmpty(Model.PersonalImage))
+                            {
+                                <img src="~/Images/Freelancer/@Model.PersonalImage"
+                                     class="rounded-circle border"
+                                     style="width:70px;height:70px;object-fit:cover;" />
+                            }
+                            else
+                            {
+                                <div class="rounded-circle bg-secondary"
+                                     style="width:70px;height:70px;"></div>
+                            }
+                        </div>
+
+                        <!-- Upload new -->
+                        <div class="flex-grow-1">
+                            <input type="file"
+                                   name="personalImageFile"
+                                   class="form-control"
+                                   accept="image/*" />
+                            <small class="text-muted">Upload new profile image</small>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-bold">Passport / National ID</label>
+
+                    <div class="d-flex align-items-center gap-3">
+
+                        <!-- Old Image Preview -->
+                        <div>
+                            @if (!string.IsNullOrEmpty(Model.PassportOrNationalIdImage))
+                            {
+                                <img src="~/Images/Freelancer/@Model.PassportOrNationalIdImage"
+                                     class="border rounded"
+                                     style="width:90px;height:70px;object-fit:cover;" />
+                            }
+                            else
+                            {
+                                <div class="border rounded bg-light"
+                                     style="width:90px;height:70px;"></div>
+                            }
+                        </div>
+
+                        <!-- Upload new -->
+                        <div class="flex-grow-1">
+                            <input type="file"
+                                   name="idImageFile"
+                                   class="form-control"
+                                   accept="image/*" />
+                            <small class="text-muted">Upload new ID or passport image</small>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-success mt-3">
+            Save Changes
+        </button>
+    </form>
+</div>
+
+@section Scripts {
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        $(document).ready(function () {
+
+            $('.select2').select2({
+                placeholder: "Select",
+                allowClear: true,
+                width: '100%'
+            }).on('change', function () {
+                $(this).valid(); // 🔥 THIS is the fix
+            });
+
+        });
+    </script>
+
+}

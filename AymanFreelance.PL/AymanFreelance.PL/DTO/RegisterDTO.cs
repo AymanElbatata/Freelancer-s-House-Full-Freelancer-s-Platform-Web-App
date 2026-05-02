@@ -52,7 +52,7 @@ namespace AymanFreelance.PL.DTO
         [Display(Name = "Type")]
         public int? TypeId { get; set; }
 
-        [Required(ErrorMessage = "Type is required")]
+        [Required(ErrorMessage = "Profession is required")]
         [Display(Name = "Profession")]
         public int? ProfessionTBLId { get; set; }
 
