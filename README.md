@@ -2,7 +2,8 @@
 
 🧑‍💻 Freelancer House
 Freelance Management Web Application
-<p align="center"> <b>Organize Clients • Manage Projects • Track Tasks</b> </p> <p align="center"> <a href="https://freelancerhouse.runasp.net/">🌐 Live Demo</a> &nbsp;•&nbsp; <a href="https://payhip.com/b/DOqvI">🛒 Purchase</a> </p>
+<p align="center"> <b>Organize Clients • Manage Projects • Track Tasks</b> </p> <p align="center"> <a  target="_blank" href="https://freelancerhouse.runasp.net/">🌐 Live Demo</a> &nbsp;•&nbsp; <a  target="_blank" href="https://payhip.com/b/DOqvI">🛒 Purchase</a> </p>
+
 📌 Overview
 
 Freelancer House is a complete web application designed to help freelancers manage their daily workflow efficiently.
