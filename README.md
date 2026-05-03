@@ -12,6 +12,27 @@ It centralizes client management, project tracking, and task organization in one
 
 Payments are handled externally based on the freelancer’s preferred method.
 
+## 📸 Preview
+
+<p align="center">
+  <img src="/Screenshots/001.jpg" width="45%" />
+  <img src="/Screenshots/002.jpg" width="45%" />
+</p>
+
+<p align="center">
+  <img src="/Screenshots/003.jpg" width="45%" />
+  <img src="/Screenshots/004.jpg" width="45%" />
+</p>
+
+<p align="center">
+  <img src="/Screenshots/005.jpg" width="45%" />
+  <img src="/Screenshots/006.jpg" width="45%" />
+</p>
+
+<p align="center">
+  <img src="/Screenshots/007.jpg" width="45%" />
+  <img src="/S
+
 ✨ Features
 
 👤 Client Management
