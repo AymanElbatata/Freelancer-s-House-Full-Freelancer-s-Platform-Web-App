@@ -355,16 +355,20 @@ namespace AymanFreelance.PL.Controllers
         {
             if (ModelState.IsValid)
             {
+                var user = await unitOfWork.UserManager.FindByEmailAsync(model.Email);
+
                 // Check if email already exists
-                if (await unitOfWork.UserManager.FindByEmailAsync(model.Email) == null)
+                if (user == null || user.IsDeleted)
                 {
                     ModelState.AddModelError("Email", "Email is not registered");
                     return View(model);
                 }
 
-                var user = await unitOfWork.UserManager.FindByEmailAsync(model.Email);
-
-                var result = await unitOfWork.UserManager.UpdateAsync(user);
+                if (user.IsDeleted)
+                {
+                    ModelState.AddModelError("Email", "Account is Deleted");
+                    return View(model);
+                }
 
                 var ResetCode = await unitOfWork.UserManager.GeneratePasswordResetTokenAsync(user);
 
@@ -373,16 +377,15 @@ namespace AymanFreelance.PL.Controllers
 
                 var ActivateLink = configuration["AymanFreelance.Pl.Url"] + "Account/ResetPassword?Email=" + user.Email + "&ResetCode=" + encodedToken;
 
-                var Email = new EmailTBL_VM();
+                var Email = new EmailTBL();
                 Email.To = model.Email;
                 Email.Subject = configuration["AymanFreelance.Pl.Name"] + " - Forgot Password";
                 Email.Body = await GetActivationTemplateAsync(user.FirstName, Email.Subject, ResetCode, ActivateLink);
-                var newEmail = Mapper.Map<EmailTBL>(Email);
 
                 // Send email
-                await unitOfWork.EmailTBLRepository.SendEmailAsync(newEmail, 2);
+                await unitOfWork.EmailTBLRepository.SendEmailAsync(Email, 2);
                 // Save Email
-                unitOfWork.EmailTBLRepository.Add(newEmail);
+                unitOfWork.EmailTBLRepository.Add(Email);
 
                 return RedirectToAction("ResetPassword", "Account", new { Email = model.Email, Message = "Email is not Confirmed, Check your email address now!" });
             }

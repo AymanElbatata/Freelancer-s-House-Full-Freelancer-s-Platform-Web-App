@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using AymanFreelance.BLL.Interfaces;
 using AymanFreelance.BLL.Repositories;
+using AymanFreelance.DAL.BaseEntity;
 using AymanFreelance.DAL.Entities;
 using AymanFreelance.PL.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -13,7 +14,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace AymanFreelance.PL.Controllers
 {
-    [Authorize(Roles = "SponsorClient")]
+    [Authorize(Roles = "Admin, SponsorClient")]
     public class SponsorClientController : Controller
     {
         private readonly IUnitOfWork unitOfWork;
@@ -72,6 +73,7 @@ namespace AymanFreelance.PL.Controllers
             return View(model);
         }
 
+        [HttpGet]
         public IActionResult UpdateProject(int? ProjectId)
         {
             var data = new ProjectTBL_VM();
@@ -182,6 +184,7 @@ namespace AymanFreelance.PL.Controllers
             if (ProjectId == 0 || !unitOfWork.ProjectTBLRepository.GetAllCustomized(
                 filter: a => a.IsDeleted == false && a.ID == ProjectId).Any())
                 return RedirectToAction("Projects", "SponsorClient");
+
             var project = unitOfWork.ProjectTBLRepository.GetAllCustomized(
                 filter: a => a.IsDeleted == false && a.ID == ProjectId).FirstOrDefault();
             if (project != null)
@@ -194,17 +197,33 @@ namespace AymanFreelance.PL.Controllers
         #endregion
 
         #region Projects + Manage + Hire Freelancer
-        public IActionResult Projects()
+        public async Task<IActionResult> Projects()
         {
-            var data = new Search_VM();
+            var currentUser = await GetCurrentUser();
+
+            if (currentUser == null)
+                return Unauthorized();
+
+            var isAdmin = await unitOfWork.UserManager.IsInRoleAsync(currentUser, "Admin");
+
+            var ownerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             var projects = unitOfWork.ProjectTBLRepository.GetAllCustomized(
-                       filter: a => a.IsDeleted == false && a.ProjectOwnerTBLId == User.FindFirstValue(ClaimTypes.NameIdentifier).ToString(), includes: new Expression<Func<ProjectTBL, object>>[]
-                       {
-                                  p => p.ProjectOwnerTBL,
-                                  p => p.ProjectFreelancerTBL
-                       });
-            data.ProjectTBL_VM = Mapper.Map<List<ProjectTBL_VM>>(projects.OrderByDescending(a => a.CreationDate));
+                filter: x =>
+                    !x.IsDeleted &&
+                    (isAdmin || x.ProjectOwnerTBLId == ownerId),
+                includes: new Expression<Func<ProjectTBL, object>>[]
+                {
+            x => x.ProjectOwnerTBL,
+            x => x.ProjectFreelancerTBL
+                })
+                .OrderByDescending(x => x.CreationDate)
+                .ToList();
+
+            var data = new Search_VM
+            {
+                ProjectTBL_VM = Mapper.Map<List<ProjectTBL_VM>>(projects)
+            };
 
             return View(data);
         }
@@ -278,21 +297,26 @@ namespace AymanFreelance.PL.Controllers
             //var ActivateUserLink = configuration["AymanFreelance.Pl.Url"] + "Home/WhoisProject?ProjectId=" + project.ID;
             string ActivateUserLink = AymanFreelanceUrl + "Home/WhoisProject?ProjectId=" + project.ID;
 
-            var Email = new EmailTBL_VM();
+            var Email = new EmailTBL();
             Email.To = Freelancer.Email;
             //Email.Subject = configuration["AymanFreelance.Pl.Name"] + " - Project Hiring";
             Email.Subject = AymanFreelanceName + " - Project Hiring";
             Email.Body = await GetActivationTemplateAsync(Freelancer.UserName, Email.Subject, project.HashCode, ActivateUserLink);
-            var newEmail = Mapper.Map<EmailTBL>(Email);
             // Send email
-            await unitOfWork.EmailTBLRepository.SendEmailAsync(newEmail, 2);
+            await unitOfWork.EmailTBLRepository.SendEmailAsync(Email, 2);
             // Save Email
-            unitOfWork.EmailTBLRepository.Add(newEmail);
+            unitOfWork.EmailTBLRepository.Add(Email);
             // Send to Freelancer End
 
             return RedirectToAction("HireFreelancer", "SponsorClient", new { ProjectId = project.ID });
         }
         #endregion
+
+        private async Task<AppUser> GetCurrentUser()
+        {
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return await unitOfWork.UserManager.FindByIdAsync(userId);
+        }
 
         private async Task<string> GetActivationTemplateAsync(string UserName, string Subject, string ProjectCode, string ProjectUrl)
         {

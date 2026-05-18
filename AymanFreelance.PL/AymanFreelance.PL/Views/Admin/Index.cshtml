@@ -1,4 +1,709 @@
-﻿@{
+﻿@model AymanFreelance.PL.Models.AdminDashboard_VM
+
+@{
     ViewData["Title"] = "Admin Panel";
 }
-<h2>Hello Admin</h2>
+
+<style>
+    .admin-dashboard .stat-card {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        cursor: default;
+    }
+
+        .admin-dashboard .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.08) !important;
+        }
+
+    .admin-dashboard .nav-tabs .nav-link {
+        background-color: #f8f9fa;
+        color: #495057;
+        border: 1px solid #dee2e6;
+        font-weight: 500;
+        padding: 0.6rem 1.2rem;
+        transition: all 0.2s;
+    }
+
+        .admin-dashboard .nav-tabs .nav-link.active {
+            background-color: #ff6b8b;
+            border-color: #ff6b8b;
+            color: white;
+        }
+
+        .admin-dashboard .nav-tabs .nav-link:not(.active):hover {
+            background-color: #e9ecef;
+            border-color: #dee2e6;
+            color: #ff6b8b;
+        }
+
+    .admin-dashboard .table th {
+        font-weight: 600;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border-bottom-width: 1px;
+    }
+
+    .admin-dashboard .badge-status {
+        font-size: 0.75rem;
+        font-weight: 500;
+        padding: 0.35em 0.7em;
+        border-radius: 20px;
+    }
+
+    .admin-dashboard .action-icons a {
+        text-decoration: none;
+        transition: opacity 0.2s;
+    }
+
+        .admin-dashboard .action-icons a:hover {
+            opacity: 0.7;
+        }
+
+    .search-box {
+        position: relative;
+    }
+
+    .progress {
+        background-color: #e9ecef;
+        border-radius: 10px;
+    }
+
+    .progress-bar {
+        border-radius: 10px;
+        transition: width 0.3s ease;
+    }
+
+    @@media (max-width: 768px) {
+        .admin-dashboard .stat-card h2 {
+            font-size: 1.6rem;
+        }
+
+        .table-responsive {
+            font-size: 0.9rem;
+        }
+    }
+</style>
+
+@Html.AntiForgeryToken()
+
+<div class="admin-dashboard">
+    <!-- Dashboard Header with Stats -->
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+        <div>
+            <h1 class="h3 mb-1 fw-bold">Admin Dashboard</h1>
+            <p class="text-muted mb-0">Manage users, projects, and freelancers from one place</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="@Url.Action("Index", "Admin")" class="btn btn-outline-secondary btn-sm">
+                <i class="fas fa-sync-alt me-1"></i> Refresh
+            </a>
+        </div>
+    </div>
+
+    <!-- Stats Cards Row -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-3">
+            <div class="stat-card p-3 rounded-4 shadow-sm bg-white border-0">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <span class="text-muted text-uppercase small fw-semibold">Total Admins</span>
+                        <h2 class="mt-2 mb-0 fw-bold">@Model.TotalAdmins</h2>
+                    </div>
+                    <div class="stat-icon rounded-circle d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; background: rgba(255,107,139,0.1);">
+                        <i class="fas fa-user-shield fa-xl" style="color: #ff6b8b;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card p-3 rounded-4 shadow-sm bg-white border-0">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <span class="text-muted text-uppercase small fw-semibold">Total Clients</span>
+                        <h2 class="mt-2 mb-0 fw-bold">@Model.TotalClients</h2>
+                    </div>
+                    <div class="stat-icon rounded-circle d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; background: rgba(255,107,139,0.1);">
+                        <i class="fas fa-user-tie fa-xl" style="color: #ff6b8b;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card p-3 rounded-4 shadow-sm bg-white border-0">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <span class="text-muted text-uppercase small fw-semibold">Total Freelancers</span>
+                        <h2 class="mt-2 mb-0 fw-bold">@Model.TotalFreelancers</h2>
+                    </div>
+                    <div class="stat-icon rounded-circle d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; background: rgba(255,107,139,0.1);">
+                        <i class="fas fa-laptop-code fa-xl" style="color: #ff6b8b;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card p-3 rounded-4 shadow-sm bg-white border-0">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <span class="text-muted text-uppercase small fw-semibold">Total Projects</span>
+                        <h2 class="mt-2 mb-0 fw-bold">@Model.TotalProjects</h2>
+                        <small class="text-muted">Active: @Model.TotalActiveProjects | Completed: @Model.TotalCompletedProjects</small>
+                    </div>
+                    <div class="stat-icon rounded-circle d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; background: rgba(255,107,139,0.1);">
+                        <i class="fas fa-project-diagram fa-xl" style="color: #ff6b8b;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabs Navigation -->
+    <div class="dashboard-tabs mb-4">
+        <ul class="nav nav-tabs border-0 gap-2 flex-wrap" id="adminTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active rounded-3" id="users-tab" data-bs-toggle="tab" data-bs-target="#users" type="button" role="tab" aria-controls="users" aria-selected="true">
+                    <i class="fas fa-users me-2"></i>Users (@(Model.UserTBL_VM?.Count ?? 0))
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link rounded-3" id="projects-tab" data-bs-toggle="tab" data-bs-target="#projects" type="button" role="tab" aria-controls="projects" aria-selected="false">
+                    <i class="fas fa-tasks me-2"></i>Projects (@(Model.ProjectTBL_VM?.Count ?? 0))
+                </button>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Tab Content Panels -->
+    <div class="tab-content" id="adminTabsContent">
+
+        <!-- USERS TAB -->
+        <div class="tab-pane fade show active" id="users" role="tabpanel" aria-labelledby="users-tab">
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-header bg-white border-0 pt-4 pb-0 px-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
+                    <h5 class="fw-bold mb-0"><i class="fas fa-users me-2" style="color: #ff6b8b;"></i>All Registered Users</h5>
+                    <div class="d-flex gap-2">
+                        <div class="search-box">
+                            <i class="fas fa-search position-absolute ms-3 mt-3 text-muted small"></i>
+                            <input type="text" id="searchUsersInput" class="form-control ps-5 rounded-pill" placeholder="Search users..." style="max-width: 250px;">
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body p-4">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle" id="usersTable">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>User</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Role</th>
+                                    <th>Joined Date</th>
+                                    <th class="text-end">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTableBody">
+                                @if (Model.UserTBL_VM != null && Model.UserTBL_VM.Any())
+                                {
+                                    foreach (var user in Model.UserTBL_VM)
+                                    {
+                                        <tr data-user-id="@user.Id">
+                                            <td>
+                                                <div class="fw-semibold">@user.UserName</div>
+                                                <small class="text-muted">@user.FirstName @user.LastName</small>
+                                            </td>
+                                            <td>@user.Email</td>
+                                            <td>@user.Phone</td>
+                                            <td>
+                                                @if (user.RoleName == "Admin")
+                                                {
+                                                    <span class="badge bg-danger bg-opacity-10 text-danger px-3 py-1 rounded-pill">Admin</span>
+                                                }
+                                                else if (user.RoleName == "Freelancer")
+                                                {
+                                                    <span class="badge bg-info bg-opacity-10 text-info px-3 py-1 rounded-pill">Freelancer</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-secondary bg-opacity-10 text-secondary px-3 py-1 rounded-pill">Client</span>
+                                                }
+                                            </td>
+                                            <td>@(user.CreationDate?.ToString("yyyy-MM-dd") ?? "N/A")</td>
+                                            <td class="text-end action-icons">
+                                                <a href="javascript:void(0)" onclick="editUser('@user.Id')" class="text-secondary me-2" title="Edit">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                <a href="javascript:void(0)" onclick="deleteUser('@user.Id')" class="text-danger" title="Delete">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="7" class="text-center text-muted py-4">No users found</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PROJECTS TAB -->
+        <div class="tab-pane fade" id="projects" role="tabpanel" aria-labelledby="projects-tab">
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-header bg-white border-0 pt-4 pb-0 px-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="fas fa-project-diagram" style="color: #ff6b8b;"></i>
+                        <h5 class="fw-bold mb-0">Project List</h5>
+                        <a href="@Url.Action("Projects", "SponsorClient")" class="btn btn-link text-decoration-none p-0 ms-2" style="color: #ff6b8b;">
+                            <i class="fas fa-external-link-alt ms-1"></i> Manage
+                        </a>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <select id="projectFilterSelect" class="form-select form-select-sm rounded-pill" style="width: auto; background-color: #f8f9fa;">
+                            <option value="all">All Projects</option>
+                            <option value="available">Available (No Freelancer)</option>
+                            <option value="inprogress">In Progress</option>
+                            <option value="inwork">In Work</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="card-body p-4">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle" id="projectsTable">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Project Name</th>
+                                    <th>Client</th>
+                                    <th>Freelancer</th>
+                                    <th>Budget</th>
+                                    <th>Status</th>
+                                    <th>Start Date</th>
+                                    <th>Delivery Date</th>
+                                    <th>Progress</th>
+                                    <th class="text-end">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="projectsTableBody">
+                                @if (Model.ProjectTBL_VM != null && Model.ProjectTBL_VM.Any())
+                                {
+                                    foreach (var project in Model.ProjectTBL_VM)
+                                    {
+                                        // Determine status
+                                        string status = GetProjectStatus(project);
+                                        string statusBadgeClass = GetStatusBadgeClass(status);
+                                        int progressPercentage = CalculateProgress(project);
+
+                                        <tr data-project-id="@project.ID" data-status="@status.ToLower()">
+                                            <td>
+                                                <div class="fw-semibold">@project.Name</div>
+                                                <small class="text-muted">@(project.Description?.Length > 50 ? project.Description.Substring(0, 50) + "..." : project.Description)</small>
+                                            </td>
+                                            <td>@(project.ProjectOwnerTBL?.UserName ?? "N/A")</td>
+                                            <td>
+                                                @if (string.IsNullOrEmpty(project.ProjectFreelancerTBLId))
+                                                {
+                                                    <span class="badge bg-warning bg-opacity-10 text-warning">Not Assigned</span>
+                                                }
+                                                else
+                                                {
+                                                    @(project.ProjectFreelancerTBL?.UserName ?? "Assigned")
+                                                }
+                                            </td>
+                                            <td>
+                                                <div class="fw-semibold">$@(project.TotalCost?.ToString("N0") ?? "0")</div>
+                                                <small class="text-muted">Advance: $@(project.PaymentInAdvance?.ToString("N0") ?? "0")</small>
+                                            </td>
+                                            <td>
+                                                <span class="badge-status @statusBadgeClass">@status</span>
+                                            </td>
+                                            <td>@(project.DateOfStartWork?.ToString("yyyy-MM-dd") ?? "Not started")</td>
+                                            <td>@(project.DateOfDelivery?.ToString("yyyy-MM-dd") ?? "Not set")</td>
+                                            <td>
+                                                @if (progressPercentage > 0)
+                                                {
+                                                    <div class="progress" style="height: 6px;">
+                                                        <div class="progress-bar" role="progressbar" style="width: @progressPercentage%; background-color: #ff6b8b;"
+                                                             aria-valuenow="@progressPercentage" aria-valuemin="0" aria-valuemax="100"></div>
+                                                    </div>
+                                                    <small class="text-muted">@progressPercentage%</small>
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-muted">-</span>
+                                                }
+                                            </td>
+                                            <td class="text-end action-icons">
+                                                <a href="javascript:void(0)" onclick="viewProject(@project.ID)" class="text-info me-2" title="View">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                <a href="javascript:void(0)" onclick="deleteProject(@project.ID)" class="text-danger" title="Delete">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="9" class="text-center text-muted py-4">No projects found</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Toast Notification Container -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1100">
+    <div id="liveToast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true" data-bs-delay="3000">
+        <div class="d-flex">
+            <div class="toast-body" id="toastMessage">Action completed</div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+        </div>
+    </div>
+</div>
+
+<!-- Edit User Modal -->
+<div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4">
+            <div class="modal-header border-0" style="background: linear-gradient(135deg, #ff6b8b 0%, #ff8fab 100%);">
+                <h5 class="modal-title text-white fw-bold" id="editUserModalLabel">
+                    <i class="fas fa-user-edit me-2"></i>Edit User
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <form id="editUserForm">
+                    <input type="hidden" id="editUserId" name="Id" />
+
+                    <div class="mb-3">
+                        <label for="editUserName" class="form-label fw-semibold">Username</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light"><i class="fas fa-user"></i></span>
+                            <input type="text" class="form-control" id="editUserName" name="UserName" required />
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="editFirstName" class="form-label fw-semibold">First Name</label>
+                            <input type="text" class="form-control" id="editFirstName" name="FirstName" />
+                        </div>
+                        <div class="col-md-6">
+                            <label for="editLastName" class="form-label fw-semibold">Last Name</label>
+                            <input type="text" class="form-control" id="editLastName" name="LastName" />
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="editEmail" class="form-label fw-semibold">Email</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light"><i class="fas fa-envelope"></i></span>
+                            <input type="email" class="form-control" id="editEmail" name="Email" required />
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="editPhone" class="form-label fw-semibold">Phone Number</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light"><i class="fas fa-phone"></i></span>
+                            <input type="tel" class="form-control" id="editPhone" name="PhoneNumber" />
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="editRole" class="form-label fw-semibold">Role</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light"><i class="fas fa-tag"></i></span>
+                            <select class="form-select" id="editRole" name="RoleName" required>
+                                <option value="">Select Role</option>
+                                <option value="Admin">Admin</option>
+                                <option value="Freelancer">Freelancer</option>
+                                <option value="SponsorClient">Client</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer border-0 pt-0 pb-4 px-4">
+                <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary rounded-pill px-4" onclick="submitEditUser()" style="background-color: #ff6b8b; border-color: #ff6b8b;">
+                    <i class="fas fa-save me-2"></i>Save Changes
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Helper functions for status determination (same logic as backend)
+    function getProjectStatus(project) {
+        if (!project.projectFreelancerTBLId || project.projectFreelancerTBLId === '') {
+            return 'Available';
+        }
+        if (!project.dateOfDelivery) {
+            return 'In Progress';
+        }
+        var deliveryDate = new Date(project.dateOfDelivery);
+        var now = new Date();
+        if (deliveryDate <= now) {
+            return 'Completed';
+        } else {
+            return 'In Work';
+        }
+    }
+
+    function getStatusBadgeClass(status) {
+        switch(status) {
+            case 'Available': return 'bg-warning bg-opacity-10 text-warning';
+            case 'In Progress': return 'bg-primary bg-opacity-10 text-primary';
+            case 'In Work': return 'bg-info bg-opacity-10 text-info';
+            case 'Completed': return 'bg-success bg-opacity-10 text-success';
+            default: return 'bg-secondary bg-opacity-10 text-secondary';
+        }
+    }
+
+    // Search functionality
+    document.getElementById('searchUsersInput')?.addEventListener('input', function(e) {
+        const searchTerm = e.target.value.toLowerCase();
+        const tableRows = document.querySelectorAll('#usersTableBody tr');
+
+        tableRows.forEach(row => {
+            if (row.querySelector('td')) {
+                const text = row.innerText.toLowerCase();
+                row.style.display = text.includes(searchTerm) ? '' : 'none';
+            }
+        });
+    });
+
+    // Project filter functionality
+    document.getElementById('projectFilterSelect')?.addEventListener('change', function(e) {
+        const filterValue = e.target.value;
+        const tableRows = document.querySelectorAll('#projectsTableBody tr');
+
+        tableRows.forEach(row => {
+            if (row.querySelector('td')) {
+                if (filterValue === 'all') {
+                    row.style.display = '';
+                } else {
+                    const statusCell = row.querySelector('td:nth-child(5)');
+                    if (statusCell) {
+                        const status = statusCell.innerText.trim().toLowerCase();
+                        row.style.display = status === filterValue ? '' : 'none';
+                    }
+                }
+            }
+        });
+    });
+
+    function deleteUser(userId) {
+        if (confirm('Are you sure you want to delete this user?')) {
+            const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+
+            $.ajax({
+                url: '@Url.Action("DeleteUser", "Admin")',
+                type: 'POST',
+                data: { id: userId },  // This sends as form data
+                headers: {
+                    'RequestVerificationToken': token
+                },
+                success: function(response) {
+                    if (response.success) {
+                        showToast('User deleted successfully', 'success');
+                        setTimeout(() => location.reload(), 1500);
+                    } else {
+                        showToast(response.message || 'Error deleting user', 'danger');
+                    }
+                },
+                error: function() {
+                    showToast('Error deleting user', 'danger');
+                }
+            });
+        }
+    }
+    function deleteProject(projectId) {
+        if (confirm('Are you sure you want to delete this project?')) {
+            const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+
+            $.ajax({
+                url: '@Url.Action("DeleteProject", "Admin")',
+                type: 'POST',
+                data: { id: projectId },  // This sends as form data
+                headers: {
+                    'RequestVerificationToken': token
+                },
+                success: function(response) {
+                    if (response.success) {
+                        showToast('Project deleted successfully', 'success');
+                        setTimeout(() => location.reload(), 1500);
+                    } else {
+                        showToast(response.message || 'Error deleting project', 'danger');
+                    }
+                },
+                error: function() {
+                    showToast('Error deleting project', 'danger');
+                }
+            });
+        }
+    }
+
+    function editUser(userId) {
+        // Fetch user data and populate modal
+        const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+
+        fetch(`@Url.Action("GetUserById", "Admin")/${userId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'RequestVerificationToken': token
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Populate modal fields
+                document.getElementById('editUserId').value = data.user.id;
+                document.getElementById('editUserName').value = data.user.userName;
+                document.getElementById('editFirstName').value = data.user.firstName || '';
+                document.getElementById('editLastName').value = data.user.lastName || '';
+                document.getElementById('editEmail').value = data.user.email;
+                document.getElementById('editPhone').value = data.user.phoneNumber || '';
+                document.getElementById('editRole').value = data.user.roleName;
+
+                // Show modal
+                const modal = new bootstrap.Modal(document.getElementById('editUserModal'));
+                modal.show();
+            } else {
+                showToast(data.message || 'Error loading user data', 'danger');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showToast('Error loading user data', 'danger');
+        });
+    }
+
+    function submitEditUser() {
+        const userId = document.getElementById('editUserId').value;
+        const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+
+        const userData = {
+            id: userId,
+            userName: document.getElementById('editUserName').value,
+            firstName: document.getElementById('editFirstName').value,
+            lastName: document.getElementById('editLastName').value,
+            email: document.getElementById('editEmail').value,
+            phoneNumber: document.getElementById('editPhone').value,
+            roleName: document.getElementById('editRole').value
+        };
+
+        // Validate
+        if (!userData.userName || !userData.email || !userData.roleName) {
+            showToast('Please fill all required fields', 'danger');
+            return;
+        }
+
+        fetch('@Url.Action("UpdateUser", "Admin")', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'RequestVerificationToken': token
+            },
+            body: JSON.stringify(userData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showToast('User updated successfully', 'success');
+                // Close modal
+                const modal = bootstrap.Modal.getInstance(document.getElementById('editUserModal'));
+                modal.hide();
+                // Reload page after 1 second
+                setTimeout(() => location.reload(), 1500);
+            } else {
+                showToast(data.message || 'Error updating user', 'danger');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showToast('Error updating user', 'danger');
+        });
+    }
+
+    function viewProject(projectId) {
+        showToast('View project feature - Implement your logic', 'info');
+        window.location.href = '/Home/WhoisProject?ProjectId=' + projectId;
+    }
+
+    function showToast(message, type = 'success') {
+        const toastEl = document.getElementById('liveToast');
+        toastEl.classList.remove('bg-success', 'bg-danger', 'bg-info');
+
+        if (type === 'success') toastEl.classList.add('bg-success');
+        else if (type === 'danger') toastEl.classList.add('bg-danger');
+        else toastEl.classList.add('bg-info');
+
+        document.getElementById('toastMessage').innerText = message;
+        const bsToast = new bootstrap.Toast(toastEl, { autohide: true, delay: 3000 });
+        bsToast.show();
+    }
+</script>
+
+@functions {
+    // Razor helper functions for status calculation
+    string GetProjectStatus(ProjectTBL_VM project)
+    {
+        if (string.IsNullOrEmpty(project.ProjectFreelancerTBLId))
+            return "Available";
+
+        if (project.DateOfDelivery == null)
+            return "In Progress";
+
+        return project.DateOfDelivery <= DateTime.Now ? "Completed" : "In Work";
+    }
+
+    string GetStatusBadgeClass(string status)
+    {
+        switch (status)
+        {
+            case "Available": return "bg-warning bg-opacity-10 text-warning";
+            case "In Progress": return "bg-primary bg-opacity-10 text-primary";
+            case "In Work": return "bg-info bg-opacity-10 text-info";
+            case "Completed": return "bg-success bg-opacity-10 text-success";
+            default: return "bg-secondary bg-opacity-10 text-secondary";
+        }
+    }
+
+    int CalculateProgress(ProjectTBL_VM project)
+    {
+        if (project.DateOfDelivery == null || project.DateOfStartWork == null)
+            return 0;
+
+        if (project.DateOfDelivery <= DateTime.Now)
+            return 100;
+
+        var totalDays = (project.DateOfDelivery.Value - project.DateOfStartWork.Value).Days;
+        var daysPassed = (DateTime.Now - project.DateOfStartWork.Value).Days;
+
+        if (totalDays <= 0) return 0;
+
+        var percentage = (int)((double)daysPassed / totalDays * 100);
+        return Math.Min(100, Math.Max(0, percentage));
+    }
+}
+
+
+

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using AymanFreelance.BLL.Interfaces;
+using AymanFreelance.DAL.BaseEntity;
 using AymanFreelance.PL.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +10,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace AymanFreelance.PL.Controllers
 {
-    [Authorize(Roles = "Freelancer")]
+    [Authorize(Roles = "Admin, Freelancer")]
     public class FreelancerController : Controller
     {
         private readonly IUnitOfWork unitOfWork;
@@ -22,19 +23,23 @@ namespace AymanFreelance.PL.Controllers
             this.Mapper = Mapper;
             this.configuration = configuration;
         }
-        public async Task<IActionResult> Index()
-        {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier).ToString();
-            var getCurrentUser = await unitOfWork.UserManager.FindByIdAsync(userId);
-            var model = new FreelancerDashboardVM
-            {
-                Name = getCurrentUser.UserName,
-                Email = getCurrentUser.Email,
-                Photo = getCurrentUser.PersonalImage,
-                ProjectTBL_VM = unitOfWork.ProjectTBLRepository.GetAllCustomized(p => !p.IsDeleted && p.ProjectFreelancerTBLId == userId).Select(p => Mapper.Map<ProjectTBL_VM>(p)).OrderByDescending(a => a.DateOfStartWork).ToList()
-            };
 
-            return View(model);
+        public async Task<IActionResult> Index(string? userId)
+        {
+            var currentUser = await GetCurrentUser();
+
+            if (currentUser == null)
+                return Unauthorized();
+
+            var isAdmin = await unitOfWork.UserManager.IsInRoleAsync(currentUser, "Admin");
+
+            ViewBag.CurrentUser = isAdmin ? "Admin" : "Freelancer";
+
+            var selectedUser = isAdmin && !string.IsNullOrWhiteSpace(userId)
+                ? await unitOfWork.UserManager.FindByIdAsync(userId)
+                : currentUser;
+
+            return View(GetFreelancerDashboard(selectedUser));
         }
 
         [HttpGet]
@@ -120,5 +125,34 @@ namespace AymanFreelance.PL.Controllers
             return View(model);
         }
 
+
+        private async Task<AppUser> GetCurrentUser()
+        {
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return await unitOfWork.UserManager.FindByIdAsync(userId);
+        }
+
+        private FreelancerDashboardVM GetFreelancerDashboard(AppUser user)
+        {
+            if (user == null)
+                return new FreelancerDashboardVM();
+
+            var model = new FreelancerDashboardVM
+            {
+                Name = user.UserName,
+                Email = user.Email,
+                Photo = user.PersonalImage,
+
+                ProjectTBL_VM = unitOfWork.ProjectTBLRepository
+                    .GetAllCustomized(p =>
+                        !p.IsDeleted &&
+                        p.ProjectFreelancerTBLId == user.Id)
+                    .OrderByDescending(p => p.DateOfStartWork)
+                    .Select(p => Mapper.Map<ProjectTBL_VM>(p))
+                    .ToList()
+            };
+
+            return model;
+        }
     }
 }
