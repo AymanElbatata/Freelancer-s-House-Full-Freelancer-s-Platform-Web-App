@@ -1,5 +1,8 @@
 # Freelancer's House – Full Freelancer's Platform Web App (Source Code + Database)
 
+<img src="/Screenshots/MainGIF.gif" width="100%" alt="Freelancer's House Demo"/>
+
+
 🧑‍💻 Freelancer House
 Freelance Management Web Application
 <p align="center"> <b>Organize Clients • Manage Projects • Track Tasks</b> </p> <p align="center"> <a  target="_blank" href="https://freelancerhouse.runasp.net/">🌐 Live Demo</a> &nbsp;•&nbsp; <a  target="_blank" href="https://payhip.com/b/DOqvI">🛒 Purchase</a> </p>
