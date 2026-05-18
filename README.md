@@ -34,6 +34,11 @@ Payments are handled externally based on the freelancer’s preferred method.
   <img src="/Screenshots/008.jpg" width="45%" />
 </p>
 
+<p align="center">
+  <img src="/Screenshots/009.jpg" width="45%" />
+  <img src="/Screenshots/010.jpg" width="45%" />
+</p>
+
 
 ✨ Features
 
